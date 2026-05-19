@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Attendance | BCA STUDY HUB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: #030712;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(14,165,233,0.12) 0%, transparent 70%),
+        #030712;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 440px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 28px;
+      padding: 32px 28px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 32px 64px -12px rgba(0,0,0,0.6);
+    }
+
+    /* ---- CLOCK SECTION ---- */
+    .clock-section {
+      text-align: center;
+      padding: 24px 0 20px;
+    }
+    .live-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #10b981;
+      margin-bottom: 12px;
+    }
+    .live-dot::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: blink 1.4s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    #realTimeClock {
+      font-size: clamp(2.8rem, 10vw, 3.8rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: #fff;
+      line-height: 1;
+      text-shadow: 0 0 40px rgba(14,165,233,0.4);
+      font-variant-numeric: tabular-nums;
+    }
+    .clock-date {
+      font-size: 13px;
+      color: #475569;
+      font-weight: 600;
+      margin-top: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ---- SESSION COUNTDOWN ---- */
+    .session-bar {
+      margin: 20px 0;
+      background: rgba(30,41,59,0.6);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .session-info { min-width: 0; }
+    .session-subject {
+      font-size: 14px;
+      font-weight: 800;
+      color: #f1f5f9;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .session-meta {
+      font-size: 11px;
+      color: #475569;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+
+    /* ---- DIVIDER ---- */
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin: 22px 0;
+    }
+
+    /* ---- INPUTS ---- */
+    .field { margin-bottom: 16px; }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 7px;
+    }
+    .field input {
+      width: 100%;
+      background: rgba(30,41,59,0.5);
+      border: 1.5px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      color: #f1f5f9;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .field input::placeholder { color: #334155; font-weight: 500; }
+    .field input:focus {
+      border-color: #0ea5e9;
+      box-shadow: 0 0 0 4px rgba(14,165,233,0.12);
+      background: rgba(30,41,59,0.85);
+    }
+
+    /* ---- CONFIRM BOX ---- */
+    #confirmBox {
+      display: none;
+      background: rgba(14,165,233,0.06);
+      border: 1.5px solid rgba(14,165,233,0.2);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    #confirmBox .confirm-label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: #475569;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    #confirmBox .confirm-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+    }
+    #confirmBox .confirm-roll {
+      font-size: 22px;
+      font-weight: 900;
+      color: #38bdf8;
+      font-variant-numeric: tabular-nums;
+    }
+    #confirmBox .confirm-note {
+      font-size: 11px;
+      color: #475569;
+      margin-top: 8px;
+    }
+
+    /* ---- ERROR ---- */
+    #errorBox {
+      display: none;
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #f87171;
+    }
+
+    /* ---- BUTTON ---- */
+    #mainBtn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #0ea5e9 0%, #7c3aed 100%);
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+      box-shadow: 0 8px 24px -4px rgba(14,165,233,0.35);
+      letter-spacing: 0.02em;
+    }
+    #mainBtn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 16px 32px -4px rgba(14,165,233,0.45); }
+    #mainBtn:active:not(:disabled) { transform: translateY(0); }
+    #mainBtn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    #backBtn {
+      display: none;
+      width: 100%;
+      padding: 13px;
+      background: rgba(30,41,59,0.7);
+      color: #94a3b8;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s, color 0.2s;
+    }
+    #backBtn:hover { background: rgba(30,41,59,1); color: #f1f5f9; }
+
+    /* ---- SUCCESS ---- */
+    #successScreen {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+    .success-icon {
+      font-size: 64px;
+      display: block;
+      margin-bottom: 16px;
+      animation: pop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes pop { from{transform:scale(0.5);opacity:0} to{transform:scale(1);opacity:1} }
+    .success-title { font-size: 24px; font-weight: 900; color: #10b981; margin-bottom: 8px; }
+    .success-msg { font-size: 14px; color: #64748b; margin-bottom: 20px; line-height: 1.6; }
+    .receipt {
+      background: rgba(16,185,129,0.06);
+      border: 1px solid rgba(16,185,129,0.15);
+      border-radius: 16px;
+      padding: 16px;
+      text-align: left;
+    }
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      font-size: 13px;
+      color: #64748b;
+    }
+    .receipt-row span:last-child { font-weight: 700; color: #f1f5f9; }
+    .receipt-row.status span:last-child { color: #10b981; }
+
+    /* ---- ALREADY SUBMITTED ---- */
+    #alreadyScreen {
+      display: none;
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    /* ---- ENDED SCREEN ---- */
+    #endedScreen {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    /* ---- HEADER ---- */
+    .page-header { text-align: center; margin-bottom: 24px; }
+    .brand { font-size: 26px; font-weight: 900; color: #fff; letter-spacing: -0.02em; }
+    .brand span { color: #38bdf8; }
+    .brand-sub { font-size: 12px; color: #334155; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+
+    /* ---- MOBILE FRIENDLY ---- */
+    @media (max-width: 480px) {
+      .card { padding: 24px 18px; border-radius: 24px; }
+    }
+  </style>
+  <link rel="stylesheet" href="modern-theme.css" />
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" style="position:fixed; inset:0; background:rgba(3,7,18,0.9); display:flex; align-items:center; justify-content:center; z-index:1000; color:#fff; font-family:'Outfit',sans-serif; font-size:1.2rem;">
+    Loading attendance session...
+  </div>
+
+<div class="card">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="brand">BCA <span>STUDY HUB</span></div>
+    <div class="brand-sub">Live Attendance Portal</div>
+  </div>
+
+  <!-- Live Clock -->
+  <div class="clock-section">
+    <div class="live-dot">Live Session</div>
+    <div id="realTimeClock">--:--:--</div>
+    <div class="clock-date" id="clockDate">--</div>
+  </div>
+
+  <!-- Session Info Bar -->
+  <div class="session-bar" id="sessionBar">
+    <div class="session-info">
+      <div class="session-subject" id="dispSubject">Connecting...</div>
+      <div class="session-meta" id="dispMeta">Loading session details...</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Main Form Area -->
+  <div id="mainArea">
+
+    <!-- Entry Fields -->
+    <div id="entryFields">
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="studentName" placeholder="Enter your official name" autocomplete="name" inputmode="text" />
+      </div>
+      <div class="field">
+        <label>Roll Number</label>
+        <input type="number" id="rollNumber" placeholder="University roll number" autocomplete="off" inputmode="numeric" />
+      </div>
+    </div>
+
+    <!-- Confirm Box -->
+    <div id="confirmBox">
+      <div class="confirm-label">Confirm Your Details</div>
+      <div class="confirm-name" id="confirmName"></div>
+      <div class="confirm-roll" id="confirmRoll"></div>
+      <div class="confirm-note">⚠️ Incorrect details will lead to invalid attendance</div>
+    </div>
+
+    <!-- Error -->
+    <div id="errorBox"></div>
+
+    <!-- Submit Button -->
+    <button id="mainBtn" onclick="handleAction()">Continue →</button>
+    <button id="backBtn" onclick="goBack()">← Go Back</button>
+
+  </div>
+
+  <!-- Success Screen -->
+  <div id="successScreen">
+    <span class="success-icon">✅</span>
+    <div class="success-title">Attendance Recorded!</div>
+    <div class="success-msg" id="successMsg"></div>
+    <div class="receipt" id="receiptBox"></div>
+  </div>
+
+  <!-- Already Submitted -->
+  <div id="alreadyScreen">
+    <div style="font-size:52px;margin-bottom:14px;">📍</div>
+    <div style="font-size:20px;font-weight:900;color:#38bdf8;margin-bottom:8px;">Already Submitted</div>
+    <div style="font-size:13px;color:#475569;line-height:1.6;margin-bottom:20px;">Your attendance is already recorded for this session.</div>
+    <div class="receipt" id="alreadyReceipt"></div>
+  </div>
+
+  <!-- Session Ended / 404 — rendered by JS into body -->
+
+</div><!-- /card -->
+
+<!-- Firebase Firestore -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+// ─── FIREBASE INIT ────────────────────────────────────────────────
+firebase.initializeApp({
+  apiKey: "AIzaSyC_mWJld2NksodLIg0hI_O0wuLWpUL4AoE",
+  authDomain: "bca-store.firebaseapp.com",
+  projectId: "bca-store",
+  storageBucket: "bca-store.firebasestorage.app",
+  messagingSenderId: "1063532602856",
+  appId: "1:1063532602856:web:30812a52ccbded1548305d"
+});
+
+const db = firebase.firestore();
+db.enablePersistence({ synchronizeTabs: true }).catch((err) => {
+  console.warn('Firestore persistence could not be enabled:', err.message);
+});
+
+// ─── STATE ───────────────────────────────────────────────────────
+const sessionId = new URLSearchParams(window.location.search).get('id');
+let sessionData   = null;
+let isVerifying   = false;
+let timerInterval = null;
+let clockInterval = null;
+let sessionUnsub  = null;
+let timerStarted  = false;
+
+// ─── CLOCK ───────────────────────────────────────────────────────
+function startClock() {
+  const clockEl = document.getElementById('realTimeClock');
+  const dateEl  = document.getElementById('clockDate');
+
+  function tick() {
+    const now = new Date();
+    clockEl.textContent = now.toLocaleTimeString('en-IN', {
+      hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    dateEl.textContent = now.toLocaleDateString('en-IN', {
+      weekday: 'long', day: '2-digit', month: 'long', year: 'numeric'
+    });
+  }
+  tick();
+  clockInterval = setInterval(tick, 1000);
+}
+
+// ─── SESSION EXPIRY WATCHER ──────────────────────────────────────
+function startSessionTimer() {
+  if (timerStarted || !sessionData) return;
+  timerStarted = true;
+  if (timerInterval) clearInterval(timerInterval);
+
+  function check() {
+    if (Date.now() > sessionData.expiresAt) {
+      clearInterval(timerInterval);
+      show404(); // hard redirect on expiry
+    }
+  }
+  check();
+  timerInterval = setInterval(check, 1000); // Check every second for strict expiry
+}
+
+// ─── INIT SESSION ────────────────────────────────────────────────
+function initSession() {
+  // Start clock immediately
+  startClock();
+
+  if (!sessionId) {
+    showEnded('Invalid attendance link. Please use the correct link from your teacher.');
+    return;
+  }
+
+  // Hide loading
+  document.getElementById('loadingOverlay').style.display = 'none';
+
+  // Check local cache first
+  const localRec = localStorage.getItem(`submitted_${sessionId}`);
+  if (localRec) {
+    showAlready(JSON.parse(localRec));
+    return;
+  }
+
+  // Real-time listener for Session
+  sessionUnsub = db.collection('active_attendance_registry').doc(sessionId)
+    .onSnapshot({ includeMetadataChanges: false }, (doc) => {
+      if (!doc.exists) {
+         showEnded('This session does not exist.');
+         if (sessionUnsub) sessionUnsub();
+         return;
+      }
+
+      const data = doc.data();
+      sessionData = data;
+
+      let expiryTime = data.expiresAt;
+      if (expiryTime && typeof expiryTime.toMillis === 'function') {
+        expiryTime = expiryTime.toMillis();
+      }
+
+      // Session expired check (via status OR via strict timestamp)
+      if (data.status !== 'active' || Date.now() > expiryTime) {
+        if (sessionUnsub) sessionUnsub();
+        show404();
+        return;
+      }
+
+      // We need to attach expiryTime back to sessionData so startSessionTimer works correctly
+      sessionData.expiresAt = expiryTime;
+
+      // Render session details
+      document.getElementById('dispSubject').textContent = data.subject || 'Subject';
+      document.getElementById('dispMeta').textContent =
+        `${(data.semester||'').replace('Semester','Sem ')} • Prof. ${data.teacherName || ''}`;
+
+      // Start strict timer based on Firebase timestamp offset
+      startSessionTimer();
+
+    }, (err) => {
+      console.error('Firestore error:', err);
+    });
+}
+
+// ─── ACTIONS ─────────────────────────────────────────────────────
+function handleAction() {
+  hideError();
+  if (!isVerifying) {
+    // Step 1: Validate & show confirm
+    const name = document.getElementById('studentName').value.trim();
+    const roll = document.getElementById('rollNumber').value.trim();
+    if (!name) { showError('Please enter your full name.'); return; }
+    if (!roll)  { showError('Please enter your roll number.'); return; }
+    if (!sessionData) { showError('Session not loaded yet. Please wait a moment.'); return; }
+
+    document.getElementById('confirmName').textContent = name;
+    document.getElementById('confirmRoll').textContent = `# ${roll}`;
+    document.getElementById('entryFields').style.display = 'none';
+    document.getElementById('confirmBox').style.display = 'block';
+    document.getElementById('backBtn').style.display = 'block';
+    document.getElementById('mainBtn').textContent = 'Confirm & Submit ✅';
+    isVerifying = true;
+
+  } else {
+    // Step 2: Submit
+    submitAttendance();
+  }
+}
+
+function goBack() {
+  isVerifying = false;
+  hideError();
+  document.getElementById('confirmBox').style.display = 'none';
+  document.getElementById('entryFields').style.display = 'block';
+  document.getElementById('backBtn').style.display = 'none';
+  document.getElementById('mainBtn').textContent = 'Continue →';
+}
+
+async function submitAttendance() {
+  const name = document.getElementById('studentName').value.trim();
+  const roll = document.getElementById('rollNumber').value.trim();
+  const btn  = document.getElementById('mainBtn');
+
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  try {
+    const recordId = `${sessionId}_${roll}`;
+
+    // strict duplicate check
+    const existing = await db.collection('attendance_submissions').doc(recordId).get();
+    if (existing.exists) {
+      showAlready(existing.data());
+      return;
+    }
+
+    const now = new Date();
+    const record = {
+      sessionId,
+      studentName:  name,
+      rollNumber:   roll,
+      semester:     sessionData.semester,
+      subject:      sessionData.subject,
+      teacherName:  sessionData.teacherName,
+      timestamp:    firebase.firestore.FieldValue.serverTimestamp(),
+      date:         now.toLocaleDateString('en-IN'),
+      time:         now.toLocaleTimeString('en-IN'),
+      status:       'Present'
+    };
+
+    // Use a batch to write record and increment session count atomically
+    const batch = db.batch();
+    const subRef = db.collection('attendance_submissions').doc(recordId);
+    const sessionRef = db.collection('active_attendance_registry').doc(sessionId);
+    
+    batch.set(subRef, record);
+    batch.update(sessionRef, {
+        attendanceCount: firebase.firestore.FieldValue.increment(1)
+    });
+    
+    await batch.commit();
+
+    // Cache locally to prevent UI flicker on refresh
+    localStorage.setItem(`submitted_${sessionId}`, JSON.stringify({
+      studentName: name, rollNumber: roll, time: record.time, subject: record.subject
+    }));
+
+    if (sessionUnsub) sessionUnsub();
+    clearInterval(timerInterval);
+    showSuccess(name, roll, record.time);
+
+  } catch(e) {
+    console.error(e);
+    showError('Could not save. Check your internet and try again.');
+    btn.disabled = false;
+    btn.textContent = 'Confirm & Submit ✅';
+  }
+}
+
+// ─── SCREENS ─────────────────────────────────────────────────────
+function showSuccess(name, roll, time) {
+  document.getElementById('mainArea').style.display = 'none';
+  document.getElementById('successMsg').textContent =
+    `Hi ${name.split(' ')[0]}, your attendance has been saved to Firebase in Realtime!`;
+  document.getElementById('receiptBox').innerHTML = `
+    <div class="receipt-row"><span>Name</span><span>${name}</span></div>
+    <div class="receipt-row"><span>Roll No.</span><span>${roll}</span></div>
+    <div class="receipt-row"><span>Time</span><span>${time}</span></div>
+    <div class="receipt-row status"><span>Status</span><span>✅ Present</span></div>
+  `;
+  document.getElementById('successScreen').style.display = 'block';
+}
+
+function showAlready(data) {
+  document.getElementById('mainArea').style.display = 'none';
+  document.getElementById('alreadyReceipt').innerHTML = `
+    <div class="receipt-row"><span>Name</span><span>${data.studentName||''}</span></div>
+    <div class="receipt-row"><span>Roll No.</span><span>${data.rollNumber||''}</span></div>
+    <div class="receipt-row"><span>Time</span><span>${data.time||''}</span></div>
+    <div class="receipt-row status"><span>Status</span><span>✅ Present</span></div>
+  `;
+  document.getElementById('alreadyScreen').style.display = 'block';
+}
+
+function showEnded(msg) {
+    // Re-use 404 for invalid links
+    show404(msg);
+}
+
+// ─── 404 PAGE (STUNNING PREMIUM DESIGN) ──────────────────────────
+function show404(customMsg) {
+  if (sessionUnsub) sessionUnsub();
+  clearInterval(timerInterval);
+  clearInterval(clockInterval);
+  
+  const msg = customMsg || 'The attendance window has reached its deadline. No further submissions are being accepted for this period.';
+  
+  document.body.innerHTML = `
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap');
+      body { 
+        margin:0; background:#020617; font-family:'Outfit',sans-serif;
+        display:flex; align-items:center; justify-content:center;
+        min-height:100vh; padding:20px; overflow: hidden;
+      }
+      .bg-glow {
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 600px; height: 600px; background: radial-gradient(circle, rgba(14,165,233,0.1) 0%, transparent 70%);
+        z-index: -1; filter: blur(50px);
+      }
+      .page-404 { text-align:center; max-width:440px; }
+      .num { 
+        font-size:clamp(8rem,25vw,12rem); font-weight:900; line-height:0.8;
+        background:linear-gradient(180deg, #1e293b 0%, #020617 100%);
+        -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+        margin-bottom: -20px;
+      }
+      .icon-box {
+        width: 80px; height: 80px; background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 24px;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 24px; font-size: 2.5rem;
+      }
+      .ttl { font-size:2rem; font-weight:900; color:#f8fafc; margin-bottom: 12px; letter-spacing: -0.02em; }
+      .sub { font-size:15px; color:#94a3b8; line-height:1.6; margin-bottom: 32px; font-weight: 500; }
+      .tag { 
+        display:inline-block; padding:6px 16px; border-radius:99px;
+        background:rgba(239,68,68,0.1); border:1px solid rgba(239, 68, 68, 0.2);
+        color:#f87171; font-size:12px; font-weight:800; letter-spacing:0.1em;
+        text-transform:uppercase; margin-bottom:12px;
+      }
+      .divider { width: 40px; height: 4px; background: #ef4444; border-radius: 2px; margin: 0 auto 32px; }
+    </style>
+    <div class="bg-glow"></div>
+    <div class='page-404'>
+      <div class='num'>404</div>
+      <div class='icon-box'>⌛</div>
+      <div class='tag'>Access Terminated</div>
+      <div class='ttl'>Session Closed</div>
+      <p class='sub'>${msg}</p>
+      <div class="divider"></div>
+      <p style='font-size:11px;color:#334155;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;'>BCA STUDY HUB OFFICIAL PORTAL</p>
+    </div>
+  `;
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorBox');
+  el.textContent = '⚠️ ' + msg;
+  el.style.display = 'block';
+}
+
+function hideError() {
+  document.getElementById('errorBox').style.display = 'none';
+}
+
+// ─── START ────────────────────────────────────────────────────────
+initSession();
+</script>
+  <script src="modern-effects.js"></script>
+  <script src="enhancements.js"></script>
+</body>
+</html>

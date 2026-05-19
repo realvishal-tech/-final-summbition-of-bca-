@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Admin Dashboard | Enterprise Control Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="modern-theme.css">
+  <link rel="stylesheet" href="attendance-admin.css">
+  <!-- QR Code Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebaseapps/9.22.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebaseapps/9.22.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebaseapps/9.22.0/firebase-firestore.js"></script>
+</head>
+<body>
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="admin-navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">
+        <span class="brand-icon">📊</span>
+        <span>Attendance Control Center</span>
+      </div>
+      <div class="navbar-actions">
+        <span class="connection-status" id="connectionStatus">🟢 Connected</span>
+        <button class="logout-btn" onclick="adminLogout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== MAIN CONTAINER ==================== -->
+  <div class="admin-container">
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-menu">
+        <button class="menu-item active" onclick="switchTab('dashboard')">
+          <span class="icon">📈</span>
+          <span>Dashboard</span>
+        </button>
+        <button class="menu-item" onclick="switchTab('sessions')">
+          <span class="icon">🔴</span>
+          <span>Active Sessions</span>
+        </button>
+        <button class="menu-item" onclick="switchTab('history')">
+          <span class="icon">📚</span>
+          <span>History</span>
+        </button>
+        <button class="menu-item" onclick="switchTab('analytics')">
+          <span class="icon">📊</span>
+          <span>Analytics</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="admin-main">
+      <!-- Dashboard Tab -->
+      <section id="dashboardTab" class="tab-content active">
+        <div class="dashboard-header">
+          <h1>Dashboard</h1>
+          <button class="btn-primary" onclick="openCreateSessionModal()">
+            <span>➕</span> Create Session
+          </button>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">🟢</div>
+            <div class="stat-content">
+              <div class="stat-label">Active Sessions</div>
+              <div class="stat-value" id="activeSessCount">0</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-content">
+              <div class="stat-label">Total Submissions</div>
+              <div class="stat-value" id="totalSubmissions">0</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⏱️</div>
+            <div class="stat-content">
+              <div class="stat-label">Avg Duration</div>
+              <div class="stat-value" id="avgDuration">15m</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div class="stat-content">
+              <div class="stat-label">Total Sessions</div>
+              <div class="stat-value" id="totalSessions">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Sessions Section -->
+        <div class="section">
+          <h2>🔴 Live Attendance Sessions</h2>
+          <div id="activeSessionsContainer" class="sessions-grid">
+            <div class="empty-state">
+              <div class="empty-icon">🎯</div>
+              <p>No active sessions. Create one to get started!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Submission Feed -->
+        <div class="section">
+          <h2>📡 Live Submission Feed</h2>
+          <div id="liveSubmissionFeed" class="submission-feed">
+            <div class="empty-state">
+              <div class="empty-icon">📝</div>
+              <p>Submissions will appear here in real-time</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Active Sessions Tab -->
+      <section id="sessionsTab" class="tab-content">
+        <div class="section-header">
+          <h1>Active Sessions</h1>
+          <input type="search" id="sessionSearch" placeholder="Search sessions..." class="search-input">
+        </div>
+        <div id="allSessionsContainer" class="sessions-list">
+          <div class="empty-state">
+            <div class="empty-icon">🔍</div>
+            <p>No active sessions found</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- History Tab -->
+      <section id="historyTab" class="tab-content">
+        <div class="section-header">
+          <h1>Attendance History</h1>
+          <button class="btn-secondary" onclick="exportHistoryPDF()">📥 Export as PDF</button>
+        </div>
+        <div id="historyContainer" class="history-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Subject</th>
+                <th>Teacher</th>
+                <th>Batch</th>
+                <th>Submissions</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <tr><td colspan="6" style="text-align: center; padding: 40px;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Analytics Tab -->
+      <section id="analyticsTab" class="tab-content">
+        <div class="analytics-grid">
+          <div class="analytics-card">
+            <h3>Attendance Distribution</h3>
+            <canvas id="attendanceChart"></canvas>
+          </div>
+          <div class="analytics-card">
+            <h3>Submission Timeline</h3>
+            <canvas id="submissionChart"></canvas>
+          </div>
+          <div class="analytics-card">
+            <h3>Subject-wise Attendance</h3>
+            <div id="subjectStats" class="subject-stats"></div>
+          </div>
+          <div class="analytics-card">
+            <h3>Time-based Insights</h3>
+            <div id="timeStats" class="time-stats"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- Create Session Modal -->
+  <div id="createSessionModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Create Attendance Session</h2>
+        <button class="close-btn" onclick="closeModal('createSessionModal')">&times;</button>
+      </div>
+      <form onsubmit="handleCreateSession(event)" class="modal-form">
+        <div class="form-group">
+          <label>Subject Name</label>
+          <input type="text" id="sessionSubject" required placeholder="e.g., DBMS">
+        </div>
+        <div class="form-group">
+          <label>Teacher Name</label>
+          <input type="text" id="sessionTeacher" required placeholder="e.g., Dr. Vishal">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Batch</label>
+            <select id="sessionBatch" required>
+              <option>Select Batch</option>
+              <option>BCA</option>
+              <option>IT</option>
+              <option>CSE</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Semester</label>
+            <select id="sessionSemester" required>
+              <option>Select Semester</option>
+              <option>1st</option>
+              <option>2nd</option>
+              <option>3rd</option>
+              <option>4th</option>
+              <option>5th</option>
+              <option>6th</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Duration (minutes)</label>
+            <input type="number" id="sessionDuration" value="15" min="5" max="120" required>
+          </div>
+          <div class="form-group">
+            <label>Description (optional)</label>
+            <input type="text" id="sessionDescription" placeholder="e.g., Lecture on Normalization">
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeModal('createSessionModal')">Cancel</button>
+          <button type="submit" class="btn-primary">Create Session</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Session Details Modal -->
+  <div id="sessionDetailsModal" class="modal">
+    <div class="modal-content modal-large">
+      <div class="modal-header">
+        <h2 id="detailsTitle">Session Details</h2>
+        <button class="close-btn" onclick="closeModal('sessionDetailsModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="details-grid">
+          <div class="detail-item">
+            <label>Subject</label>
+            <div id="detailSubject">-</div>
+          </div>
+          <div class="detail-item">
+            <label>Teacher</label>
+            <div id="detailTeacher">-</div>
+          </div>
+          <div class="detail-item">
+            <label>Session ID</label>
+            <div id="detailSessionId" style="font-family: monospace; font-size: 0.9rem;">-</div>
+          </div>
+          <div class="detail-item">
+            <label>Time Remaining</label>
+            <div id="detailCountdown">-</div>
+          </div>
+        </div>
+
+        <!-- Attendance Link -->
+        <div class="attendance-link-section">
+          <label>Attendance Link</label>
+          <div class="link-input-group">
+            <input type="text" id="attendanceLinkInput" readonly>
+            <button class="btn-icon" onclick="copyToClipboard('#attendanceLinkInput')" title="Copy">📋</button>
+          </div>
+        </div>
+
+        <!-- QR Code -->
+        <div class="qr-section">
+          <label>QR Code</label>
+          <div id="qrCodeContainer" style="margin: 20px 0; text-align: center;"></div>
+          <button class="btn-secondary btn-sm" onclick="downloadQRCode()">📥 Download QR</button>
+        </div>
+
+        <!-- Submissions List -->
+        <div class="submissions-section">
+          <h3>Attendees</h3>
+          <div id="sessionSubmissionsList" class="submissions-list"></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-danger" onclick="endSession()" id="endSessionBtn">End Session</button>
+        <button class="btn-secondary" onclick="closeModal('sessionDetailsModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="firebase-attendance.js"></script>
+  <script src="attendance-admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initAuthListener();
+      initAdminDashboard();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mark Your Attendance | BCA Study Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="modern-theme.css">
+  <link rel="stylesheet" href="attendance-student.css">
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebaseapps/9.22.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebaseapps/9.22.0/firebase-firestore.js"></script>
+</head>
+<body>
+  <!-- ==================== LOADING OVERLAY ==================== -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Connecting to session...</p>
+    </div>
+  </div>
+
+  <!-- ==================== CONTAINER ==================== -->
+  <div class="student-container">
+    <!-- ==================== HEADER ==================== -->
+    <header class="student-header">
+      <div class="header-content">
+        <div class="header-title">
+          <span class="title-icon">🎓</span>
+          <span>BCA Study Hub</span>
+        </div>
+        <div class="connection-badge" id="connectionBadge">🟢 Connected</div>
+      </div>
+    </header>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="student-main">
+      <!-- ==================== SESSION CARD ==================== -->
+      <div class="session-card">
+        <div class="session-card-header">
+          <h1 id="subjectName" class="subject-title">Loading...</h1>
+          <div class="session-status" id="sessionStatus">Connecting...</div>
+        </div>
+
+        <div class="session-details-grid">
+          <div class="detail">
+            <span class="detail-label">👨‍🏫 Teacher</span>
+            <span class="detail-value" id="teacherName">-</span>
+          </div>
+          <div class="detail">
+            <span class="detail-label">📚 Batch</span>
+            <span class="detail-value" id="batchName">-</span>
+          </div>
+          <div class="detail">
+            <span class="detail-label">📖 Semester</span>
+            <span class="detail-value" id="semesterName">-</span>
+          </div>
+          <div class="detail">
+            <span class="detail-label">👥 Attendees</span>
+            <span class="detail-value" id="attendeeCount">0</span>
+          </div>
+        </div>
+
+        <!-- ==================== COUNTDOWN TIMER ==================== -->
+        <div class="countdown-section">
+          <div class="countdown-timer" id="countdownTimer">
+            <div class="timer-value" id="timerDisplay">15:00</div>
+            <div class="timer-label">Time Remaining</div>
+          </div>
+          <div class="timer-progress">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+        </div>
+
+        <!-- ==================== ATTENDANCE FORM ==================== -->
+        <form id="attendanceForm" class="attendance-form" onsubmit="submitAttendance(event)">
+          <div class="form-title">📝 Attendance Form</div>
+
+          <div class="form-group">
+            <label for="fullName">Full Name *</label>
+            <input 
+              type="text" 
+              id="fullName" 
+              name="fullName"
+              placeholder="Enter your full name"
+              required
+              autocomplete="name"
+            >
+            <div class="form-hint">First and last name</div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="rollNumber">Roll Number *</label>
+              <input 
+                type="text" 
+                id="rollNumber" 
+                name="rollNumber"
+                placeholder="e.g., BCA001"
+                required
+                autocomplete="off"
+              >
+              <div class="form-hint">Unique roll number</div>
+            </div>
+
+            <div class="form-group">
+              <label for="registrationNumber">Registration Number *</label>
+              <input 
+                type="text" 
+                id="registrationNumber" 
+                name="registrationNumber"
+                placeholder="e.g., 123456789"
+                required
+                autocomplete="off"
+              >
+              <div class="form-hint">As per registration</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="semester">Semester *</label>
+            <select id="semester" name="semester" required>
+              <option value="">Select Your Semester</option>
+              <option value="1st">1st Semester</option>
+              <option value="2nd">2nd Semester</option>
+              <option value="3rd">3rd Semester</option>
+              <option value="4th">4th Semester</option>
+              <option value="5th">5th Semester</option>
+              <option value="6th">6th Semester</option>
+            </select>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-submit" id="submitBtn">
+              <span>✅</span>
+              <span>Mark Attendance</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- ==================== SUCCESS OVERLAY ==================== -->
+        <div id="successOverlay" class="success-overlay" style="display: none;">
+          <div class="success-content">
+            <div class="success-icon">✅</div>
+            <h2>Attendance Marked!</h2>
+            <p id="successMessage">Your attendance has been successfully recorded.</p>
+            <div class="success-details">
+              <div id="successName">-</div>
+              <div id="successRoll">-</div>
+            </div>
+            <button class="btn-secondary" onclick="resetForm()">Mark Another</button>
+          </div>
+        </div>
+
+        <!-- ==================== ERROR OVERLAY ==================== -->
+        <div id="errorOverlay" class="error-overlay" style="display: none;">
+          <div class="error-content">
+            <div class="error-icon">❌</div>
+            <h2 id="errorTitle">Error</h2>
+            <p id="errorMessage">Something went wrong.</p>
+            <button class="btn-primary" onclick="closeError()">Try Again</button>
+          </div>
+        </div>
+
+        <!-- ==================== EXPIRED OVERLAY ==================== -->
+        <div id="expiredOverlay" class="expired-overlay" style="display: none;">
+          <div class="expired-content">
+            <div class="expired-icon">⏰</div>
+            <h2>Session Expired</h2>
+            <p>This attendance session has ended. You can no longer mark attendance.</p>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">
+              Contact your teacher if you believe this is an error.
+            </p>
+            <button class="btn-secondary" onclick="window.location.href='/'">Go Home</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== TIPS SECTION ==================== -->
+      <div class="tips-section">
+        <h3>📋 Important Notes</h3>
+        <ul>
+          <li>✅ Submit attendance before the timer expires</li>
+          <li>✅ Use the correct roll and registration numbers</li>
+          <li>✅ You can only submit once per session</li>
+          <li>✅ Ensure stable internet connection</li>
+        </ul>
+      </div>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="student-footer">
+      <p>BCA Study Hub © 2024 | Attendance System</p>
+    </footer>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="firebase-attendance.js"></script>
+  <script src="attendance-student.js"></script>
+</body>
+</html>

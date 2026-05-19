@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="BCA STORE - All-in-one study platform for BCA students of Babasaheb Bhim Rao Ambedkar Bihar University. Access Notes, PYQs, Video Lectures, and Lab programs." />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://bca-store.netlify.app/" />
+  <meta property="og:title" content="BCA STORE | BRABU Study Hub" />
+  <meta property="og:description"
+    content="The ultimate resource for BCA students. Notes, PYQs, and Video Lectures in one place." />
+  <meta property="og:image" content="https://bca-store.netlify.app/og-image.png" />
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://bca-store.netlify.app/" />
+  <meta property="twitter:title" content="BCA STORE | BRABU Study Hub" />
+  <meta property="twitter:description"
+    content="The ultimate resource for BCA students. Notes, PYQs, and Video Lectures in one place." />
+  <meta property="twitter:image" content="https://bca-store.netlify.app/og-image.png" />
+
+  <title>BCA STORE | BRABU — Study Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Orbitron:wght@400;700;900&display=swap"
+    rel="stylesheet" />
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="modern-theme.css" />
+
+</head>
+
+<body>
+
+
+
+  <!-- ==================== NAME ENTRY GATE ==================== -->
+  <div class="welcome-gate" id="welcomeGate">
+    <canvas id="wgCodeRain" class="wg-code-rain"></canvas>
+
+    <div class="wg-card" id="wgCard">
+      <div class="wg-code-badge">&lt;/&gt; BCA DEVELOPER ZONE</div>
+      <div class="wg-icon">📚</div>
+      <h1 class="wg-title">Welcome to <span class="wg-accent"><span class="brand-bca">BCA</span> <span
+            class="brand-accent">STORE</span></span></h1>
+      <p class="wg-subtitle">Babasaheb Bhim Rao Ambedkar Bihar University</p>
+      <div class="wg-divider"></div>
+      <p class="wg-prompt">Before we begin, tell us your name 😊</p>
+      <div class="wg-input-wrap">
+        <span class="wg-input-icon">👤</span>
+        <input type="text" id="wgNameInput" class="wg-input" placeholder="Enter your full name..." maxlength="40"
+          autocomplete="off" />
+      </div>
+      <button class="wg-btn" id="wgContinueBtn" onclick="submitWelcomeName()">Let's Go! 🚀</button>
+      <p class="wg-note">Your name is saved locally — never shared with anyone.</p>
+      <div class="wg-terminal-line">
+        <span class="wg-term-prompt">$</span>
+        <span class="wg-term-text" id="wgTermText"></span>
+        <span class="wg-term-cursor">▊</span>
+      </div>
+      <div class="wg-dev-credit">Developed with ❤️ <strong>Vishal (LND COLLEGE)</strong></div>
+    </div>
+  </div>
+
+
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon">📚</span>
+        <span class="brand-text"><span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html" class="nav-link active">🏠 Home</a>
+        <a href="my-batches.html" class="nav-link">🎓 My Batch</a>
+        <a href="exam.html" class="nav-link">📝 Exam</a>
+        <a href="test-hub.html" class="nav-link">🧠 Tests</a>
+        <a href="community.html" class="nav-link">🧑‍🤝‍🧑 Community</a>
+        <a href="analytics.html" class="nav-link">📊 Stats</a>
+        <a href="javascript:void(0)" class="nav-link" onclick="openSuggestionModal()">💬 Suggestion</a>
+        <button class="nav-bookmark-btn" id="navBkBtn" onclick="openBkPanel()" title="My Bookmarks">🔖<span
+            class="bk-count-badge" id="bkBadgeDesktop"></span></button>
+        <button class="dark-toggle" id="darkToggle" title="Toggle Dark Mode">🌙</button>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ==================== HERO SECTION ==================== -->
+  <section class="hero" id="home">
+
+    <div class="hero-bg-orb orb1"></div>
+    <div class="hero-bg-orb orb2"></div>
+    <div class="hero-content">
+      <div class="hero-badge reveal">🎓 B.R.A BIHAR UNIVERSITY</div>
+      <h1 class="hero-title reveal">
+        <span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span>
+      </h1>
+      <p class="hero-subtitle reveal">The ultimate all-in-one platform for BCA students — Notes, PYQs, Video Lectures
+        &amp; Lab Programs, all in one place.</p>
+      <!-- Search Bar -->
+      <div class="hero-search reveal">
+        <input type="text" id="globalSearch" placeholder="🔍 Search subjects, topics, notes..." autocomplete="off" />
+        <button onclick="performGlobalSearch()" id="searchBtn">Search</button>
+      </div>
+      <!-- Quick action pills -->
+      <div class="top-features-grid reveal">
+        <div class="tf-item" onclick="setFilter('notes')">
+          <span class="tf-icon">📝</span>
+          <span class="tf-title">Premium Notes</span>
+        </div>
+        <div class="tf-item" onclick="setFilter('pyq')">
+          <span class="tf-icon">📄</span>
+          <span class="tf-title">Solved PYQs</span>
+        </div>
+        <div class="tf-item" onclick="setFilter('video')">
+          <span class="tf-icon">🎥</span>
+          <span class="tf-title">Video Lectures</span>
+        </div>
+        <div class="tf-item" onclick="setFilter('lab')">
+          <span class="tf-icon">💻</span>
+          <span class="tf-title">Lab Programs</span>
+        </div>
+        <div class="tf-item" onclick="window.location.href='community.html'">
+          <span class="tf-icon">🧑‍🤝‍🧑</span>
+          <span class="tf-title">Community Hub</span>
+        </div>
+        <div class="tf-item" onclick="document.getElementById('progressGrid').scrollIntoView({behavior:'smooth'})">
+          <span class="tf-icon">📊</span>
+          <span class="tf-title">Progress Tracking</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== REVISION DUE TODAY ==================== -->
+  <section class="section revision-section" id="revisionSection" style="display:none;">
+    <div class="container">
+      <div class="section-header">
+        <h2>🔁 Revision Due Today</h2>
+        <p>Spaced repetition — topics scheduled for review</p>
+      </div>
+      <div class="revision-list" id="revisionList"></div>
+    </div>
+  </section>
+
+
+  <!-- ==================== NOTIFICATIONS SECTION ==================== -->
+  <section class="section notifications-section reveal" id="notificationsSection"
+    style="display:none; padding-top:0; padding-bottom:0;">
+    <div class="container">
+      <!-- Ticker Bar (pinned) -->
+      <div class="notif-ticker-bar" id="notifTickerBar" style="display:none;">
+        <div class="notif-ticker-label">📌 PINNED</div>
+        <div class="notif-ticker-track">
+          <div class="notif-ticker-content" id="notifTickerContent"></div>
+        </div>
+      </div>
+      <!-- Section Header -->
+      <div class="notif-section-header">
+        <div class="notif-section-left">
+          <span class="notif-section-icon">🔔</span>
+          <div>
+            <h2 class="notif-section-title">Notifications & Updates</h2>
+            <p class="notif-section-sub">Latest announcements from the admin</p>
+          </div>
+        </div>
+        <div class="notif-count-pill" id="notifCountPill"></div>
+      </div>
+      <!-- Notification Cards -->
+      <div class="notif-cards-grid" id="notifCardsGrid"></div>
+    </div>
+  </section>
+
+  <!-- ==================== STATS STRIP ==================== -->
+  <section class="stats-strip reveal">
+    <div class="container stats-grid">
+      <div class="stat-item">
+        <div class="stat-icon-bg">📚</div>
+        <div class="stat-content">
+          <span class="stat-number" id="statSubjects" data-target="33">0+</span>
+          <span class="stat-label">Subjects</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon-bg">📄</div>
+        <div class="stat-content">
+          <span class="stat-number" id="statMaterials" data-target="400">0+</span>
+          <span class="stat-label">Materials</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon-bg">🎓</div>
+        <div class="stat-content">
+          <span class="stat-number" id="statSemesters" data-target="6">0</span>
+          <span class="stat-label">Semesters</span>
+        </div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon-bg">👤</div>
+        <div class="stat-content">
+          <span class="stat-number" id="statEnrolled" data-target="0">0+</span>
+          <span class="stat-label">Students</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== QUICK ACTIONS (HIDDEN AS REQUESTED) ==================== -->
+  <section class="section quick-actions reveal" style="padding-top:20px; display: none !important;">
+    <div class="container">
+      <div class="qa-grid">
+        <a href="test-hub.html" class="qa-card glass-card">
+          <div class="qa-icon" style="background: rgba(99,102,241,0.1); color: #818CF8;">🧠</div>
+          <div class="qa-info">
+            <h3>Quiz Arena</h3>
+            <p>Challenge yourself with live quizzes.</p>
+          </div>
+          <span class="qa-arrow">→</span>
+        </a>
+        <a href="my-batches.html" class="qa-card glass-card">
+          <div class="qa-icon" style="background: rgba(16,185,129,0.1); color: #10B981;">🎓</div>
+          <div class="qa-info">
+            <h3>My Batches</h3>
+            <p>Direct access to your enrolled courses.</p>
+          </div>
+          <span class="qa-arrow">→</span>
+        </a>
+        <a href="exam.html" class="qa-card glass-card">
+          <div class="qa-icon" style="background: rgba(245,158,11,0.1); color: #F59E0B;">📑</div>
+          <div class="qa-info">
+            <h3>Resources</h3>
+            <p>Pattern & university materials.</p>
+          </div>
+          <span class="qa-arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SEMESTER CARDS ==================== -->
+  <section class="section semesters-section" id="semesters">
+    <div class="container">
+      <div class="section-header">
+        <h2>🎓 Explore our Batches</h2>
+        <p>Structured study batches designed for university excellence</p>
+      </div>
+      <div class="semester-grid reveal-stagger" id="semesterGrid">
+        <!-- Generated by JS -->
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- ==================== SYLLABUS SECTION ==================== -->
+  <section class="section syllabus-section reveal">
+    <div class="container">
+      <div class="syllabus-banner glass-card reveal-scale">
+        <div class="syllabus-icon-wrap">📑</div>
+        <div class="syllabus-info">
+          <div class="syllabus-badge">Latest Update</div>
+          <h3>BRABU BCA Official Syllabus</h3>
+          <p>Complete course curriculum and mark distribution for all 6 semesters.</p>
+        </div>
+        <a href="https://drive.google.com/file/d/1DxWBj_pj_OPeVCLvi0mgAY3CJPtMzpo6/view?usp=sharing" target="_blank"
+          class="syllabus-download-btn">
+          <span>Download PDF</span>
+          <span class="btn-icon">📥</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==================== SEARCH RESULTS OVERLAY ==================== -->
+  <section class="section" id="searchResultsSection" style="display:none;">
+    <div class="container">
+      <div class="section-header">
+        <h2>🔍 Search Results</h2>
+        <button class="btn-outline" onclick="clearSearch()" style="margin-top:8px;">✕ Clear Search</button>
+      </div>
+      <div class="cards-grid" id="searchResults"></div>
+    </div>
+  </section>
+
+  <!-- ==================== PROGRESS OVERVIEW ==================== -->
+  <section class="section progress-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>📊 Your Progress</h2>
+        <p>Track your completion across all semesters</p>
+      </div>
+      <div class="progress-grid reveal-stagger" id="progressGrid"></div>
+      <div style="text-align:center;margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="exportData()">📥 Export My Data</button>
+        <label class="btn-outline" style="cursor:pointer;">
+          📤 Import Data
+          <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)" />
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MINI CHALLENGE ==================== -->
+  <section class="section challenge-section reveal">
+    <div class="container">
+      <div class="challenge-card glass-card reveal-scale">
+        <div>
+          <h3>🎮 Daily Mini Challenge</h3>
+          <p>Test your knowledge with 5 random questions</p>
+        </div>
+        <button class="btn-primary" onclick="openChallenge()">Start Challenge →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FAQ SECTION ==================== -->
+  <section class="section faq-section reveal" id="faq">
+    <div class="container">
+      <div class="section-header">
+        <h2>Frequently Asked Questions ❓</h2>
+        <p>Everything you need to know about BCA Store</p>
+      </div>
+
+      <div class="faq-grid">
+        <div class="faq-item glass-card">
+          <div class="faq-question">
+            <span>Is BCA Store free to use?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Yes, many resources are freely available for students to support their educational journey.</p>
+          </div>
+        </div>
+
+        <div class="faq-item glass-card">
+          <div class="faq-question">
+            <span>Can I request notes or materials?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Yes, you can send requests for specific topics, units, practicals, or subjects through the suggestion
+              section.</p>
+          </div>
+        </div>
+
+        <div class="faq-item glass-card">
+          <div class="faq-question">
+            <span>How can I access study materials?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>You can browse subjects, batches, notes, PDFs, and videos directly from the platform dashboard.</p>
+          </div>
+        </div>
+
+        <div class="faq-item glass-card">
+          <div class="faq-question">
+            <span>Are the notes updated regularly?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Yes, study materials and resources are updated regularly to maintain accuracy and usefulness.</p>
+          </div>
+        </div>
+
+        <div class="faq-item glass-card">
+          <div class="faq-question">
+            <span>Can I watch videos directly on the website?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Yes, videos can be played directly inside the website using the integrated advanced video player.</p>
+          </div>
+        </div>
+
+        <div class="faq-item glass-card">
+          <div class="faq-question">
+            <span>Is BCA Store mobile friendly?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Absolutely. The platform is fully optimized for both mobile and desktop devices for a seamless
+              experience.</p>
+          </div>
+        </div>
+
+        <div class="faq-item glass-card">
+          <div class="faq-question">
+            <span>Does BCA Store support dark mode?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>Yes, the platform supports both light and dark mode for a comfortable user experience during late-night
+              study sessions.</p>
+          </div>
+        </div>
+
+        <div class="faq-item glass-card">
+          <div class="faq-question">
+            <span>What is the main goal of BCA Store?</span>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            <p>The main goal is to provide students with an organized, simple, and high-quality learning platform that
+              makes studying easier and smarter.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CONNECT STRIP ==================== -->
+  <section class="connect-strip reveal">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="premium-gradient-text">Still have questions? <span class="highlight-connect">Connect with us!</span>
+          🚀</h2>
+        <p>We're always here to help you with notes, videos, or any other queries.</p>
+      </div>
+
+      <div class="contact-btn-group">
+        <a href="mailto:10717vishal@gmail.com" class="home-contact-btn btn-mail">
+          <div class="icon-box">📧</div>
+          <span>Email Us</span>
+        </a>
+        <a href="https://wa.me/917633865663?text=HII%20VISHAL%20!%20I%20HAVE%20QUESTION%20RELATED%20TO%20BCA%20STORE"
+          target="_blank" class="home-contact-btn btn-wa">
+          <div class="icon-box">💬</div>
+          <span>WhatsApp</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="visit-counter-section">
+    <div class="container">
+      <div class="vc-card glass-card">
+        <div class="vc-icon">🌍</div>
+        <div class="vc-info">
+          <h3 id="totalVisits">0</h3>
+          <p>Global Students Visited</p>
+        </div>
+        <div class="vc-pulse" title="Live Counter Enabled"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3 class="footer-brand">📚 <span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span></h3>
+          <p>Your one-stop destination for BRABU BCA study materials. Notes, PYQs, and Video Lectures at your
+            fingertips.</p>
+          <div class="footer-socials">
+            <a href="#" title="Facebook">📘</a>
+            <a href="#" title="Instagram">📸</a>
+            <a href="#" title="YouTube">📺</a>
+            <a href="#" title="Telegram">✈️</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">🏠 Home</a></li>
+            <li><a href="my-batches.html">🎓 My Batch</a></li>
+            <li><a href="exam.html">📝 Exam Pattern</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul class="footer-links">
+            <li><a href="#" onclick="openSuggestionModal()">💬 Suggestion</a></li>
+            <li><a href="contact.html">📧 Contact Us</a></li>
+            <li><a href="privacy.html">🛡️ Privacy Policy</a></li>
+            <li><a href="terms.html">📜 Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="dev-credit-box">
+          Designed & Developed with 🖤 by
+          <a href="Https://real-vishal.netlify.app" target="_blank" class="dev-link">VISHAL 🖤</a>
+        </div>
+        <p>&copy; 2026 BCA STORE. Babasaheb Bhim Rao Ambedkar Bihar University.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== FLOATING ACTION BUTTONS ==================== -->
+
+  <!-- BACK TO TOP (REMOVED) -->
+
+  <!-- ==================== SUGGESTION MODAL ==================== -->
+  <div class="modal-overlay" id="suggestionModal">
+    <div class="modal glass-card">
+      <div class="modal-header">
+        <div style="display:flex; gap:16px;">
+          <h3 class="sugg-tab active" id="tabSend" onclick="switchSuggTab('send')">💬 Send Suggestion</h3>
+          <h3 class="sugg-tab" id="tabHistory" onclick="switchSuggTab('history')">📜 My History</h3>
+        </div>
+        <button class="modal-close" onclick="closeSuggestionModal()">✕</button>
+      </div>
+      <div id="suggSendView">
+        <div class="modal-body" id="suggestionBody">
+          <div class="form-row" style="display:grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label>Your Name</label>
+              <input type="text" id="suggName" placeholder="Enter your name..." />
+            </div>
+            <div class="form-group">
+              <label>Your Email</label>
+              <input type="email" id="suggEmail" placeholder="Enter your email..." />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Subject <span class="required">*</span></label>
+            <input type="text" id="suggSubject" placeholder="What is this about?" />
+          </div>
+          <div class="form-group">
+            <label>Category <span class="required">*</span></label>
+            <select id="suggCategory">
+              <option value="General">✨ General Feedback</option>
+              <option value="Content Missing">📝 Content Missing</option>
+              <option value="Bug Report">🐛 Bug Report</option>
+              <option value="Feature Request">💡 Feature Request</option>
+              <option value="UI/UX Issue">🎨 UI/UX Issue</option>
+              <option value="Video Issue">🎥 Video Playback</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Your Message <span class="required">*</span></label>
+            <textarea id="suggMessage" placeholder="Describe your suggestion or feedback..." rows="4" maxlength="500"
+              oninput="updateCharCount(this)"></textarea>
+            <div class="char-count"
+              style="text-align:right; font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+              <span id="charCurrent">0</span>/500
+            </div>
+          </div>
+          <input type="hidden" id="suggContext" value="" />
+        </div>
+        <div class="modal-footer" id="suggestionFooter">
+          <button class="btn-outline" onclick="closeSuggestionModal()">Cancel</button>
+          <button class="btn-primary" onclick="submitSuggestion()">Send Suggestion ✈️</button>
+        </div>
+      </div>
+      <div id="suggHistoryView" style="display:none;">
+        <div class="modal-body" id="suggestionHistoryBody" style="max-height:400px; overflow-y:auto;">
+          <!-- Generated by JS -->
+        </div>
+        <div class="modal-footer">
+          <button class="btn-outline" style="width:100%" onclick="closeSuggestionModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CHALLENGE MODAL ==================== -->
+  <div class="modal-overlay" id="challengeModal">
+    <div class="modal glass-card" style="max-width:600px;">
+      <div class="modal-header">
+        <h3>🎮 Daily Challenge</h3>
+        <button class="modal-close" onclick="closeChallenge()">✕</button>
+      </div>
+      <div class="modal-body" id="challengeBody">
+        <!-- Generated by JS -->
+      </div>
+      <div class="modal-footer" id="challengeFooter"></div>
+    </div>
+  </div>
+
+
+  <!-- ==================== TOAST ==================== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+
+  <!-- Firebase SDK (compat version for simpler syntax) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="knowledge_data.js"></script>
+  <script src="analytics.js"></script>
+  <script src="business_comm_data.js"></script>
+  <script src="c_programming_data.js"></script>
+  <script src="project_data.js"></script>
+  <script src="ms_dos_data.js"></script>
+  <script src="ms_office_data.js"></script>
+  <script src="chat_data.js"></script>
+  <script src="c_lab_data.js"></script>
+  <script src="ds_data.js"></script>
+  <script src="architecture_data.js"></script>
+  <script src="html_data.js"></script>
+  <script src="cpp_data.js"></script>
+  <script src="script.js"></script>
+  <script src="modern-effects.js"></script>
+  
+  <!-- PROFESSIONAL COOKIE CONSENT MODULE -->
+  <div class="cookie-popup" id="cookiePopup">
+    <div class="cookie-card glass-card">
+      <div class="cookie-header">
+        <span class="cookie-mini-icon">🍪</span>
+        <h4>Cookie & Privacy</h4>
+      </div>
+      <p class="cookie-desc">We use cookies to improve your experience, analyze traffic, and enhance performance.</p>
+      <div class="cookie-footer">
+        <button class="btn-cookie-reject" onclick="handleCookieChoice('rejected')">Reject</button>
+        <button class="btn-cookie-accept" onclick="handleCookieChoice('accepted')">Accept All</button>
+      </div>
+    </div>
+  </div>
+  
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initHomePage();
+    });
+
+
+  </script>
+
+  <script src="enhancements.js"></script>
+</body>
+
+</html>

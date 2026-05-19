@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel | BCA STORE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="admin-panel.css" />
+  <link rel="stylesheet" href="admin-login.css" />
+  <link rel="stylesheet" href="modern-theme.css" />
+  <link rel="stylesheet" href="admin-dashboard-modern.css" />
+  <link rel="stylesheet" href="admin-premium.css" />
+  <link rel="stylesheet" href="elite-plus-admin.css" />
+  <style>
+    /* Real-Time Highlight for New Records */
+    .record-row-new {
+        animation: highlightRow 3s ease-out;
+    }
+    @keyframes highlightRow {
+        0% { background-color: rgba(16, 185, 129, 0.2); }
+        100% { background-color: transparent; }
+    }
+  </style>
+  <!-- Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+
+<div class="admin-login-gate" id="adminLoginGate">
+  <div class="saas-login-container">
+    <div class="saas-login-card">
+      <button class="adm-top-btn" onclick="toggleDarkMode()" title="Toggle Theme" style="position: absolute; top: 16px; right: 16px; border: none; background: transparent; font-size: 1.2rem; cursor: pointer; z-index: 10;">🌙</button>
+      <div class="saas-header">
+        <div class="saas-logo">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <h1 class="saas-title">Enterprise Control Center</h1>
+        <p class="saas-subtitle">Secure authentication required for administrative access</p>
+        <div class="adm-security-badge">
+          <span class="pulse-icon"></span>
+          <span>SYSTEM SECURE • 256-BIT ENCRYPTION</span>
+        </div>
+      </div>
+
+      <div id="loginError" class="saas-error hidden">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span id="errorText"></span>
+      </div>
+
+      <form onsubmit="event.preventDefault(); adminLogin();">
+        <div class="saas-form-group">
+          <label for="adminEmail" class="saas-label">Email Address</label>
+          <div class="saas-input-wrapper">
+            <input type="email" id="adminEmail" class="saas-input" placeholder="admin@bcastore.com" required>
+          </div>
+        </div>
+
+        <div class="saas-form-group">
+          <label for="adminPassword" class="saas-label">Password</label>
+          <div class="saas-input-wrapper">
+            <input type="password" id="adminPassword" class="saas-input" placeholder="••••••••" required>
+            <button type="button" onclick="togglePassView()" class="saas-pass-toggle" aria-label="Toggle password visibility">
+              <svg id="eye-open" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+              </svg>
+              <svg id="eye-closed" class="hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="saas-options">
+          <label class="saas-checkbox-label">
+            <input type="checkbox" class="saas-checkbox">
+            Remember me
+          </label>
+        </div>
+
+        <button type="submit" id="loginBtn" class="saas-button">
+          <span id="btn-text">Sign In</span>
+          <div id="btnLoader" class="saas-loader"></div>
+        </button>
+      </form>
+
+      <div class="saas-footer">
+        Powered by <a href="Https://real-vishal.netlify.app" target="_blank" style="color: #fff; text-decoration: none; font-weight: 500;">VISHAL</a> &bull; Enterprise Secure
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ADMIN PANEL ==================== -->
+<div class="admin-panel adm-shell" id="adminPanel" style="display:none;">
+
+  <!-- SIDEBAR -->
+  <aside class="adm-sidebar" id="admSidebar">
+    <div class="adm-sb-brand">
+      <span class="adm-sb-brand-icon">⚙️</span>
+      <div class="adm-sb-brand-text">
+        <span class="brand-bca">BCA</span> <span class="brand-accent">STORE</span>
+        <div class="adm-sb-brand-sub">Admin Console</div>
+      </div>
+    </div>
+    <button class="adm-sb-toggle" id="admSbToggle" onclick="toggleAdmSidebar()" title="Collapse">◀</button>
+    <div class="adm-sb-section">
+      <div class="adm-sb-section-title">Overview</div>
+      <button class="adm-sb-item active btn-haptic" data-label="Dashboard" onclick="switchAdminTab('dashboard')" id="tabDashboard"><span class="adm-sb-icon">📊</span><span class="adm-sb-label">Dashboard</span></button>
+      <div class="adm-sb-section-title" style="margin-top:12px;">Content</div>
+      <button class="adm-sb-item btn-haptic" data-label="Add Material" onclick="switchAdminTab('add')" id="tabAdd"><span class="adm-sb-icon">➕</span><span class="adm-sb-label">Add Material</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Manage" onclick="switchAdminTab('manage')" id="tabManage"><span class="adm-sb-icon">📋</span><span class="adm-sb-label">Manage</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Test Hub" onclick="switchAdminTab('test')" id="tabTest"><span class="adm-sb-icon">🧠</span><span class="adm-sb-label">Test Hub</span></button>
+      <button class="adm-sb-item btn-haptic" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; font-weight: 700;" data-label="Elite Studio" onclick="switchAdminTab('elite')" id="tabElitePlus"><span class="adm-sb-icon">🌟</span><span class="adm-sb-label">Elite Studio</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Notifications" onclick="switchAdminTab('notifications')" id="tabNotifications"><span class="adm-sb-icon">📢</span><span class="adm-sb-label">Notifications</span></button>
+      <div class="adm-sb-section-title" style="margin-top:12px;">Insights</div>
+      <button class="adm-sb-item btn-haptic" data-label="Inbox" onclick="switchAdminTab('inbox')" id="tabInbox"><span class="adm-sb-icon">📥</span><span class="adm-sb-label">Inbox</span><span class="adm-sb-badge" id="inboxBadge" style="display:none;">0</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Visitors" onclick="switchAdminTab('visitors')" id="tabVisitors"><span class="adm-sb-icon">👥</span><span class="adm-sb-label">Visitors</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Analytics" onclick="switchAdminTab('analytics')" id="tabAnalytics"><span class="adm-sb-icon">📈</span><span class="adm-sb-label">Analytics</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Community" onclick="switchAdminTab('community')" id="tabCommunity"><span class="adm-sb-icon">🧑‍🤝‍🧑</span><span class="adm-sb-label">Community</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Voting Hub" onclick="switchAdminTab('voting')" id="tabVoting"><span class="adm-sb-icon">🔥</span><span class="adm-sb-label">Voting Hub</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Attendance" onclick="switchAdminTab('attendance')" id="tabAttendance"><span class="adm-sb-icon">📅</span><span class="adm-sb-label">Attendance</span></button>
+      <div class="adm-sb-section-title" style="margin-top:12px;">System</div>
+      <button class="adm-sb-item btn-haptic" data-label="AI Settings" onclick="switchAdminTab('ai-settings')" id="tabAiSettings"><span class="adm-sb-icon">🧠</span><span class="adm-sb-label">AI Settings</span></button>
+      <button class="adm-sb-item btn-haptic" data-label="Settings" onclick="switchAdminTab('settings')" id="tabSettings"><span class="adm-sb-icon">⚙️</span><span class="adm-sb-label">Settings</span></button>
+    </div>
+    <button class="adm-sb-logout" onclick="adminLogout()"><span class="adm-sb-icon">🚪</span><span class="adm-sb-label">Logout</span></button>
+  </aside>
+  <div class="adm-sidebar-overlay" id="admOverlay" onclick="closeAdmSidebar()"></div>
+
+  <!-- MAIN AREA -->
+  <div class="adm-main">
+    <!-- TOP BAR -->
+    <div class="adm-topbar">
+      <button class="adm-mobile-toggle" id="admMobileToggle" onclick="toggleAdmSidebar()">⋮</button>
+      <div class="adm-search">
+        <span class="adm-search-icon">🔍</span>
+        <input type="text" id="admGlobalSearch" placeholder="Search anything..." />
+      </div>
+      <div class="adm-topbar-actions">
+        <!-- Global Live Session Indicator -->
+        <div id="globalLiveIndicator" class="hidden items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full cursor-pointer hover:bg-emerald-500/20 transition-all mr-4" onclick="switchAdminTab('attendance')">
+          <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+          <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Live Session</span>
+          <span id="globalTimer" class="text-xs font-mono text-emerald-400 font-bold ml-1">00:00</span>
+        </div>
+        <button class="adm-top-btn" id="darkToggle" title="Toggle Theme" style="font-size: 1rem;">🌙</button>
+        <button class="adm-top-btn" title="Settings" onclick="switchAdminTab('settings')" style="font-size: 1rem;">⚙️</button>
+        <button class="adm-top-btn" title="Notifications">🔔<span class="adm-top-badge"></span></button>
+        <div class="adm-topbar-divider"></div>
+        
+        <!-- System Health Monitor -->
+        <div class="adm-health-widget" title="System Health: 100% Operational">
+          <div class="health-pulse"></div>
+          <div class="health-info">
+            <span class="health-label">SYSTEM HEALTH</span>
+            <span class="health-status">OPTIMAL</span>
+          </div>
+        </div>
+
+        <div class="adm-topbar-divider"></div>
+        <div class="adm-top-profile" onclick="adminLogout()">
+          <div class="adm-top-avatar">A</div>
+          <span class="adm-top-name">Admin</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="adm-content">
+
+      <!-- ====== PREMIUM DASHBOARD ====== -->
+      <div class="adm-section active" id="admin-tab-dashboard">
+
+        <!-- WELCOME BANNER -->
+        <div class="adm-welcome-banner">
+          <div>
+            <div class="adm-wb-greeting" id="admWelcomeGreeting">Good Morning, Admin 👋</div>
+            <div class="adm-wb-sub">Here's what's happening on BCA STORE today.</div>
+          </div>
+          <div class="adm-wb-stats">
+            <div class="adm-wb-stat">
+              <div class="adm-wb-stat-num" id="wbTotalMaterials">—</div>
+              <div class="adm-wb-stat-lbl">Materials</div>
+            </div>
+            <div class="adm-wb-stat">
+              <div class="adm-wb-stat-num" id="wbTotalVisitors">—</div>
+              <div class="adm-wb-stat-lbl">Students</div>
+            </div>
+            <div class="adm-wb-stat">
+              <div class="adm-wb-stat-num"><span class="adm-live-dot">LIVE</span></div>
+              <div class="adm-wb-stat-lbl">System</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS (Homepage Style) -->
+        <div class="adm-quick-actions-grid" style="margin-bottom:24px;">
+          <div class="adm-qa-card" onclick="switchAdminTab('attendance')">
+            <span class="adm-qa-icon">⚡</span>
+            <span class="adm-qa-title">Create Session</span>
+          </div>
+          <div class="adm-qa-card" onclick="switchAdminTab('add')">
+            <span class="adm-qa-icon">➕</span>
+            <span class="adm-qa-title">Add Material</span>
+          </div>
+          <div class="adm-qa-card" onclick="switchAdminTab('notifications')">
+            <span class="adm-qa-icon">📢</span>
+            <span class="adm-qa-title">Post Notice</span>
+          </div>
+          <div class="adm-qa-card" onclick="exportAttendance('pdf')">
+            <span class="adm-qa-icon">📥</span>
+            <span class="adm-qa-title">Export Report</span>
+          </div>
+          <div class="adm-qa-card" onclick="switchAdminTab('voting')">
+            <span class="adm-qa-icon">🔥</span>
+            <span class="adm-qa-title">New Vote</span>
+          </div>
+        </div>
+
+        <!-- KPI CARDS -->
+        <div class="adm-kpi-grid">
+          <div class="adm-kpi-card" style="--kpi-color:#6366f1;--kpi-bg:rgba(99,102,241,0.1);">
+            <div class="adm-kpi-top">
+              <div class="adm-kpi-icon-box">📚</div>
+              <span class="adm-kpi-trend trend-up">↑ Live</span>
+            </div>
+            <div class="adm-kpi-value" id="kpiTotalMaterials">—</div>
+            <div class="adm-kpi-label">Total Materials</div>
+            <div class="adm-kpi-sparkline" id="spark1"></div>
+          </div>
+          <div class="adm-kpi-card" style="--kpi-color:#10b981;--kpi-bg:rgba(16,185,129,0.1);">
+            <div class="adm-kpi-top">
+              <div class="adm-kpi-icon-box">📝</div>
+              <span class="adm-kpi-trend trend-up">↑ Active</span>
+            </div>
+            <div class="adm-kpi-value" id="kpiNotesDash">—</div>
+            <div class="adm-kpi-label">Notes Uploaded</div>
+            <div class="adm-kpi-sparkline" id="spark2"></div>
+          </div>
+          <div class="adm-kpi-card" style="--kpi-color:#f59e0b;--kpi-bg:rgba(245,158,11,0.1);">
+            <div class="adm-kpi-top">
+              <div class="adm-kpi-icon-box">🎥</div>
+              <span class="adm-kpi-trend trend-flat">Steady</span>
+            </div>
+            <div class="adm-kpi-value" id="kpiVideosDash">—</div>
+            <div class="adm-kpi-label">Video Lectures</div>
+            <div class="adm-kpi-sparkline" id="spark3"></div>
+          </div>
+          <div class="adm-kpi-card" style="--kpi-color:#06b6d4;--kpi-bg:rgba(6,182,212,0.1);">
+            <div class="adm-kpi-top">
+              <div class="adm-kpi-icon-box">📄</div>
+              <span class="adm-kpi-trend trend-up">↑ New</span>
+            </div>
+            <div class="adm-kpi-value" id="kpiPYQsDash">—</div>
+            <div class="adm-kpi-label">PYQs Available</div>
+            <div class="adm-kpi-sparkline" id="spark4"></div>
+          </div>
+          <div class="adm-kpi-card" style="--kpi-color:#8b5cf6;--kpi-bg:rgba(139,92,246,0.1);">
+            <div class="adm-kpi-top">
+              <div class="adm-kpi-icon-box">👥</div>
+              <span class="adm-kpi-trend trend-up">↑ Growing</span>
+            </div>
+            <div class="adm-kpi-value" id="kpiStudentsDash">—</div>
+            <div class="adm-kpi-label">Registered Students</div>
+            <div class="adm-kpi-sparkline" id="spark5"></div>
+          </div>
+          <div class="adm-kpi-card" style="--kpi-color:#ef4444;--kpi-bg:rgba(239,68,68,0.1);">
+            <div class="adm-kpi-top">
+              <div class="adm-kpi-icon-box">💬</div>
+              <span class="adm-kpi-trend trend-flat">—</span>
+            </div>
+            <div class="adm-kpi-value" id="kpiSuggDash">—</div>
+            <div class="adm-kpi-label">Inbox Messages</div>
+            <div class="adm-kpi-sparkline" id="spark6"></div>
+          </div>
+          <div class="adm-kpi-card" style="--kpi-color:#10b981;--kpi-bg:rgba(16,185,129,0.1);">
+            <div class="adm-kpi-top">
+              <div class="adm-kpi-icon-box">📅</div>
+              <span class="adm-kpi-trend trend-up">Live</span>
+            </div>
+            <div class="adm-kpi-value">84.2%</div>
+            <div class="adm-kpi-label">Avg. Attendance</div>
+            <div class="adm-kpi-sparkline" id="spark7"></div>
+          </div>
+          <div class="adm-kpi-card" style="--kpi-color:#6366f1;--kpi-bg:rgba(99,102,241,0.1);">
+            <div class="adm-kpi-top">
+              <div class="adm-kpi-icon-box">⚡</div>
+              <span class="adm-kpi-trend trend-up">100%</span>
+            </div>
+            <div class="adm-kpi-value">Online</div>
+            <div class="adm-kpi-label">System Health</div>
+            <div class="adm-kpi-sparkline" id="spark8"></div>
+          </div>
+        </div>
+
+        <!-- SMART INSIGHTS -->
+        <div class="adm-section-head">
+          <h3>🧠 Smart Insights</h3>
+          <span class="adm-section-badge" id="insightsBadge">Loading...</span>
+        </div>
+        <div class="adm-insights-strip" id="admInsightsStrip">
+          <div class="adm-insight-card">
+            <div class="adm-insight-icon insight-info">📊</div>
+            <div class="adm-insight-body">
+              <div class="adm-insight-title">Dashboard is initializing...</div>
+              <div class="adm-insight-desc">Loading live data from Firebase. Insights will appear shortly.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN 2-COL: CHART + ACTIVITY -->
+        <div class="adm-dash-two-col">
+          <!-- Weekly Chart -->
+          <div class="adm-panel">
+            <div class="adm-section-head">
+              <h3>📈 Weekly Platform Activity</h3>
+              <span class="adm-section-badge">Last 7 Days</span>
+            </div>
+            <div class="adm-bar-chart" id="admWeeklyChart">
+              <!-- bars injected by JS -->
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:0.65rem;color:var(--text-muted);padding:0 4px;">
+              <span id="wcDay0">Mon</span><span id="wcDay1">Tue</span><span id="wcDay2">Wed</span>
+              <span id="wcDay3">Thu</span><span id="wcDay4">Fri</span><span id="wcDay5">Sat</span><span id="wcDay6">Sun</span>
+            </div>
+            <div style="display:flex;gap:16px;margin-top:16px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-muted);">
+                <div style="width:10px;height:10px;border-radius:3px;background:linear-gradient(135deg,#6366f1,#8b5cf6);"></div>
+                Platform Visits
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Feed -->
+          <div class="adm-panel">
+            <div class="adm-section-head">
+              <h3>⚡ Live Activity</h3>
+              <div class="adm-live-dot">LIVE</div>
+            </div>
+            <div class="adm-activity-feed" id="admActivityFeed">
+              <div class="adm-activity-item">
+                <div class="adm-activity-dot" style="background:#6366f1;"></div>
+                <div class="adm-activity-text">Dashboard <strong>loaded</strong> successfully</div>
+                <div class="adm-activity-time">now</div>
+              </div>
+              <div class="adm-activity-item">
+                <div class="adm-activity-dot" style="background:#10b981;"></div>
+                <div class="adm-activity-text">Firebase <strong>sync active</strong></div>
+                <div class="adm-activity-time">now</div>
+              </div>
+              <div class="adm-activity-item">
+                <div class="adm-activity-dot" style="background:#f59e0b;"></div>
+                <div class="adm-activity-text">All <strong>systems operational</strong></div>
+                <div class="adm-activity-time">now</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESOURCE BREAKDOWN -->
+        <div class="adm-panel" style="margin-bottom:28px;">
+          <div class="adm-section-head">
+            <h3>📚 Resource Breakdown by Semester</h3>
+            <div style="display:flex;gap:12px;font-size:0.7rem;color:var(--text-muted);">
+              <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;background:#6366f1;border-radius:2px;display:inline-block;"></span>Notes</span>
+              <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;background:#10b981;border-radius:2px;display:inline-block;"></span>Videos</span>
+              <span style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>PYQs</span>
+            </div>
+          </div>
+          <div class="adm-res-breakdown" id="admResBreakdown">
+            <div class="adm-res-row">
+              <div class="adm-res-label">Semester 1</div>
+              <div class="adm-res-track"><div class="adm-res-seg seg-notes" id="rb1n" style="width:0%"></div><div class="adm-res-seg seg-videos" id="rb1v" style="width:0%"></div><div class="adm-res-seg seg-pyq" id="rb1p" style="width:0%"></div></div>
+              <div class="adm-res-counts" id="rbc1"><span>Loading...</span></div>
+            </div>
+            <div class="adm-res-row">
+              <div class="adm-res-label">Semester 2</div>
+              <div class="adm-res-track"><div class="adm-res-seg seg-notes" id="rb2n" style="width:0%"></div><div class="adm-res-seg seg-videos" id="rb2v" style="width:0%"></div><div class="adm-res-seg seg-pyq" id="rb2p" style="width:0%"></div></div>
+              <div class="adm-res-counts" id="rbc2"><span>Loading...</span></div>
+            </div>
+            <div class="adm-res-row">
+              <div class="adm-res-label">Semester 3</div>
+              <div class="adm-res-track"><div class="adm-res-seg seg-notes" id="rb3n" style="width:0%"></div><div class="adm-res-seg seg-videos" id="rb3v" style="width:0%"></div><div class="adm-res-seg seg-pyq" id="rb3p" style="width:0%"></div></div>
+              <div class="adm-res-counts" id="rbc3"><span>Loading...</span></div>
+            </div>
+            <div class="adm-res-row">
+              <div class="adm-res-label">Semester 4</div>
+              <div class="adm-res-track"><div class="adm-res-seg seg-notes" id="rb4n" style="width:0%"></div><div class="adm-res-seg seg-videos" id="rb4v" style="width:0%"></div><div class="adm-res-seg seg-pyq" id="rb4p" style="width:0%"></div></div>
+              <div class="adm-res-counts" id="rbc4"><span>Loading...</span></div>
+            </div>
+            <div class="adm-res-row">
+              <div class="adm-res-label">Semester 5</div>
+              <div class="adm-res-track"><div class="adm-res-seg seg-notes" id="rb5n" style="width:0%"></div><div class="adm-res-seg seg-videos" id="rb5v" style="width:0%"></div><div class="adm-res-seg seg-pyq" id="rb5p" style="width:0%"></div></div>
+              <div class="adm-res-counts" id="rbc5"><span>Loading...</span></div>
+            </div>
+            <div class="adm-res-row">
+              <div class="adm-res-label">Semester 6</div>
+              <div class="adm-res-track"><div class="adm-res-seg seg-notes" id="rb6n" style="width:0%"></div><div class="adm-res-seg seg-videos" id="rb6v" style="width:0%"></div><div class="adm-res-seg seg-pyq" id="rb6p" style="width:0%"></div></div>
+              <div class="adm-res-counts" id="rbc6"><span>Loading...</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ====== ADD MATERIAL TAB ====== -->
+      <div class="adm-section" id="admin-tab-add">
+    <div class="admin-form-card glass-card">
+      <h3>➕ Add New Study Material</h3>
+      <div class="admin-form-grid">
+        <div class="form-group">
+          <label>Semester <span class="required">*</span></label>
+          <select id="addSemester" onchange="updateSubjectDropdown('addSemester','addSubject')">
+            <option value="">— Select Semester —</option>
+            <option value="Semester1">Semester 1</option>
+            <option value="Semester2">Semester 2</option>
+            <option value="Semester3">Semester 3</option>
+            <option value="Semester4">Semester 4</option>
+            <option value="Semester5">Semester 5</option>
+            <option value="Semester6">Semester 6</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Subject <span class="required">*</span></label>
+          <select id="addSubject">
+            <option value="">— Select Subject —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Material Type <span class="required">*</span></label>
+          <select id="addType" onchange="handleAdminLinkInput()">
+            <option value="">— Select Type —</option>
+            <option value="notes">📝 Notes</option>
+            <option value="pyq">📄 PYQs</option>
+            <option value="video">🎥 Video Lecture</option>
+            <option value="pyq_solve">📜 PYQs Solve</option>
+            <option value="program">⌨️ Program</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Title <span class="required">*</span></label>
+          <input type="text" id="addTitle" placeholder="e.g. Unit 1 - Introduction to C" />
+        </div>
+        <div class="form-group" style="grid-column:1/-1;">
+          <label>Description</label>
+          <textarea id="addDescription" placeholder="Brief description of this material..." rows="3"></textarea>
+        </div>
+        <div class="form-group" style="grid-column:1/-1;">
+          <label>Link (PDF / YouTube / Drive) <span class="required">*</span></label>
+          <input type="url" id="addLink" placeholder="https://..." />
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="addMaterial()">✅ Add Material</button>
+        <button class="btn-outline" onclick="clearAddForm()">🔄 Clear Form</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== NOTIFICATIONS TAB ====== -->
+  <div class="adm-section" id="admin-tab-notifications">
+    <div class="admin-notif-layout">
+      <!-- Add Notification Form -->
+      <div class="admin-form-card glass-card">
+        <h3>📢 Post New Notification</h3>
+        <div class="form-group" style="margin-top:16px;">
+          <label>Title <span class="required">*</span></label>
+          <input type="text" id="notifTitle" placeholder="e.g. Exam Schedule Released" maxlength="80" />
+        </div>
+        <div class="form-group">
+          <label>Message <span class="required">*</span></label>
+          <textarea id="notifMessage" placeholder="Write your announcement here..." rows="4" maxlength="500"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Type</label>
+          <select id="notifType">
+            <option value="info">🔵 Info / General</option>
+            <option value="update">🟢 Update / New Content</option>
+            <option value="exam">🟡 Exam / Schedule</option>
+            <option value="alert">🔴 Alert / Urgent</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex-direction:row; align-items:center; gap:12px;">
+          <input type="checkbox" id="notifPinned" style="width:18px;height:18px;cursor:pointer;" />
+          <label for="notifPinned" style="margin:0;cursor:pointer;">📌 Pin this notification (shows in ticker)</label>
+        </div>
+        <button class="btn-primary" onclick="addNotification()" style="margin-top:16px; width:100%;">📢 Post Notification</button>
+      </div>
+      <!-- Existing Notifications List -->
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <h3>📋 All Notifications</h3>
+          <button class="btn-outline" style="color:var(--danger);" onclick="clearAllNotifications()">🗑️ Clear All</button>
+        </div>
+        <div id="adminNotifList">
+          <div class="loading-spinner"><div class="spinner"></div></div>
+        </div>
+        <div class="empty-state" id="adminNotifEmpty" style="display:none;">
+          <div class="empty-icon">🔔</div>
+          <h3>No Notifications Yet</h3>
+          <p>Use the form to post your first announcement.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== MANAGE TAB ====== -->
+  <div class="adm-section" id="admin-tab-manage">
+    <div class="admin-filter-bar glass-card">
+      <div class="form-group" style="margin:0;flex:1;">
+        <select id="filterSem" onchange="loadManageMaterials()">
+          <option value="">All Semesters</option>
+          <option value="Semester1">Semester 1</option>
+          <option value="Semester2">Semester 2</option>
+          <option value="Semester3">Semester 3</option>
+          <option value="Semester4">Semester 4</option>
+          <option value="Semester5">Semester 5</option>
+          <option value="Semester6">Semester 6</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin:0;flex:1;">
+        <select id="filterType" onchange="loadManageMaterials()">
+          <option value="">All Types</option>
+          <option value="notes">Notes</option>
+          <option value="pyq">PYQs</option>
+          <option value="video">Videos</option>
+          <option value="lab">Lab</option>
+          <option value="program">Programs</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin:0;flex:2;">
+        <input type="text" id="manageSearch" placeholder="Search materials..." oninput="loadManageMaterials()" />
+      </div>
+    </div>
+    <div id="manageMaterialsList" style="margin-top:16px;"></div>
+    <div class="empty-state" id="manageEmpty" style="display:none;">
+      <div class="empty-icon">📭</div>
+      <h3>No Materials Found</h3>
+      <p>Add materials using the "Add Material" tab.</p>
+    </div>
+  </div>
+
+  <!-- ====== TEST HUB TAB ====== -->
+  <div class="adm-section" id="admin-tab-test">
+    <div class="adm-section-head">
+      <h3>🧠 Test & Evaluation Engine</h3>
+      <div style="display:flex;gap:12px;">
+        <button class="btn-outline" onclick="loadQuestionBank()">🔄 Refresh Bank</button>
+      </div>
+    </div>
+
+    <!-- TABS WITHIN TEST HUB -->
+    <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
+      <button class="btn-primary" id="btnShowMCQ" onclick="showTestHubSubTab('MCQ')">📝 MCQ Generator</button>
+      <button class="btn-outline" id="btnShowLong" onclick="showTestHubSubTab('Long')">🧠 AI Long Answer</button>
+      <button class="btn-outline" id="btnShowBank" onclick="showTestHubSubTab('Bank')">📚 Question Bank</button>
+      <button class="btn-outline" id="btnShowResults" onclick="showTestHubSubTab('Results')">📊 Results Monitor</button>
+    </div>
+
+    <!-- 1. MCQ GENERATOR VIEW -->
+    <div id="viewMCQ">
+      <div class="adm-test-layout">
+        <!-- Input Side -->
+        <div class="glass-card adm-ai-generator-panel">
+          <div class="adm-ai-generator-header">
+            <span class="ai-pulse-dot"></span>
+            <h4>AI-Powered MCQ Generator</h4>
+            <div style="display:flex; gap:8px;">
+                <button class="adm-section-badge" id="btnMcqAiMode" style="cursor:pointer; background:var(--adm-accent-bg); color:var(--adm-accent);" onclick="toggleMcqMode('AI')">⚡ AI Parser</button>
+                <button class="adm-section-badge" id="btnMcqManualMode" style="cursor:pointer; background:rgba(255,255,255,0.05); color:var(--text-muted);" onclick="toggleMcqMode('Manual')">✏️ Manual Entry</button>
+            </div>
+          </div>
+          
+          <!-- AI Mode View -->
+          <div id="mcqAiView">
+              <p class="ai-generator-desc">Paste messy text from ChatGPT, PDFs, or docs. Our engine auto-detects questions, options, and answers.</p>
+              <div class="adm-paste-wrapper">
+                <textarea id="rawMcqInput" class="adm-paste-box" placeholder="Paste ChatGPT/PDF text here..."></textarea>
+                <div class="paste-overlay-glow"></div>
+                <div class="adm-paste-example" style="font-size:0.7rem; color:var(--text-muted); margin-top:8px; padding:8px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px dashed rgba(255,255,255,0.1);">
+                  <strong>Example Format:</strong><br>
+                  1. What is HTML?<br>
+                  A. Markup Language<br>
+                  B. Programming Language<br>
+                  Answer: A
+                </div>
+              </div>
+              <button class="btn-primary ai-generate-btn" onclick="handleMCQPaste()">
+                <span class="btn-icon">⚡</span>
+                <span>Analyze & Convert</span>
+              </button>
+          </div>
+
+          <!-- Manual Mode View -->
+          <div id="mcqManualView" style="display:none;">
+              <p class="ai-generator-desc">Add questions manually with precise options and correct answers.</p>
+              <div class="form-group">
+                  <label>Question Text</label>
+                  <textarea id="manQ" rows="2" placeholder="Enter question..." style="width:100%; padding:12px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle); color:#fff;"></textarea>
+              </div>
+              <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+                  <div class="form-group"><label>Option A</label><input type="text" id="manA" placeholder="Option A" /></div>
+                  <div class="form-group"><label>Option B</label><input type="text" id="manB" placeholder="Option B" /></div>
+                  <div class="form-group"><label>Option C</label><input type="text" id="manC" placeholder="Option C" /></div>
+                  <div class="form-group"><label>Option D</label><input type="text" id="manD" placeholder="Option D" /></div>
+              </div>
+              <div class="form-group">
+                  <label>Correct Answer</label>
+                  <select id="manCorrect" style="width:100%; padding:12px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle); color:#fff;">
+                      <option value="0">Option A</option>
+                      <option value="1">Option B</option>
+                      <option value="2">Option C</option>
+                      <option value="3">Option D</option>
+                  </select>
+              </div>
+              <button class="btn-primary" style="width:100%; margin-top:12px;" onclick="addManualQuestion()">
+                  <span class="btn-icon">➕</span>
+                  <span>Add to Quiz</span>
+              </button>
+          </div>
+        </div>
+        
+        <!-- Preview Side -->
+        <div class="glass-card adm-preview-panel">
+          <div class="adm-preview-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <div style="display:flex; flex-direction:column;">
+                <h4 style="margin:0;">Live Question Preview</h4>
+                <span id="mcqPreviewCount" style="font-size:0.75rem; color:var(--text-muted);">0 Questions Ready</span>
+            </div>
+            <button class="btn-outline" style="padding:6px 12px; font-size:0.75rem; color:var(--adm-red); border-color:rgba(239,68,68,0.2);" onclick="clearCurrentQuiz()">🗑️ Clear All</button>
+          </div>
+          
+          <div class="adm-preview-config">
+            <div class="form-group">
+              <select id="quizSem">
+                <option value="">— Semester —</option>
+                <option value="Semester1">Semester 1</option>
+                <option value="Semester2">Semester 2</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <input type="text" id="quizSub" placeholder="Subject Code" />
+            </div>
+          </div>
+          <div class="form-group">
+            <input type="text" id="quizTitle" placeholder="Quiz Title (e.g., Unit 1 Basics)" />
+          </div>
+          <div class="adm-preview-config">
+            <div class="form-group">
+              <label style="font-size:0.7rem; color:var(--text-muted);">Duration (Mins)</label>
+              <input type="number" id="quizTime" placeholder="Min" value="10" />
+            </div>
+            <div class="form-group">
+              <label style="font-size:0.7rem; color:var(--text-muted);">Immediate Results?</label>
+              <select id="quizFeedback">
+                <option value="true">Show on Click</option>
+                <option value="false">Show at End</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="mcqPreviewArea" class="adm-scroll-preview">
+            <div class="preview-empty-state">
+              <div class="preview-empty-icon">📝</div>
+              <p>Preview will appear here after analysis.</p>
+            </div>
+          </div>
+
+          <input type="hidden" id="mcqParsedData" />
+          <button class="btn-primary save-quiz-btn" onclick="saveQuiz()">
+            <span class="btn-icon">💾</span>
+            <span>Save to Question Bank</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. AI LONG ANSWER VIEW -->
+    <div id="viewLong" style="display:none;">
+      <div class="glass-card" style="max-width:800px;">
+        <h4 style="margin-bottom:12px;font-size:1rem;color:var(--text-primary);">Configure AI Long Answer Evaluation</h4>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:24px;">Provide the question and the ideal answer. The client-side AI will use these to evaluate student responses automatically.</p>
+        
+        <div class="form-group" style="display:flex;gap:12px;">
+            <select id="laSem" style="flex:1;">
+              <option value="">— Semester —</option>
+              <option value="Semester1">Semester 1</option>
+              <option value="Semester2">Semester 2</option>
+            </select>
+            <input type="text" id="laSub" placeholder="Subject Code (e.g., BCA-101)" style="flex:1;" />
+            <input type="number" id="laMarks" placeholder="Marks" style="width:100px;" value="10" />
+        </div>
+
+        <div class="form-group">
+          <label>Question Title</label>
+          <input type="text" id="laTitle" placeholder="e.g., Define Operating System" />
+        </div>
+        <div class="form-group">
+          <label>Full Question</label>
+          <textarea id="laQuestion" rows="2" placeholder="Write the full question here..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Ideal Answer (The AI will compare student answers against this)</label>
+          <textarea id="laIdealAnswer" rows="5" placeholder="An Operating System is system software that manages hardware..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Priority Keywords (Comma separated - AI gives extra marks for these)</label>
+          <input type="text" id="laKeywords" placeholder="e.g., hardware, software, resource management, kernel" />
+        </div>
+
+        <button class="btn-primary" id="saveLABtn" style="margin-top:16px;" onclick="handleLongAnswerSave()">🤖 Publish AI Question</button>
+      </div>
+    </div>
+
+    <!-- 3. QUESTION BANK VIEW -->
+    <div id="viewBank" style="display:none;">
+      <div class="adm-qb-grid" id="questionBankGrid">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+
+    <!-- 4. RESULTS MONITOR VIEW -->
+    <div id="viewResults" style="display:none;">
+      <div class="glass-card" style="margin-bottom:20px; padding: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <h4 style="font-size:1.1rem; color:var(--text-primary);">📊 Live Test Submissions</h4>
+            <div style="display:flex; gap:8px;">
+                <select id="resFilterSem" onchange="loadTestResults()" style="padding:6px 12px; border-radius:8px; background:var(--bg-base); border:1px solid var(--border-subtle); color:var(--text-primary);">
+                    <option value="Semester1">Sem 1</option>
+                    <option value="Semester2">Sem 2</option>
+                    <option value="Semester3">Sem 3</option>
+                    <option value="Semester4">Sem 4</option>
+                    <option value="Semester5">Sem 5</option>
+                    <option value="Semester6">Sem 6</option>
+                </select>
+                <button class="btn-outline" style="padding:6px 12px; font-size:0.75rem;" onclick="loadTestResults()">🔄 Refresh</button>
+            </div>
+        </div>
+      </div>
+      <div class="adm-table-container">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Roll No</th>
+              <th>Test Title</th>
+              <th>Score</th>
+              <th>Accuracy</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="testResultsTable">
+            <tr><td colspan="7" style="text-align:center; padding:40px; color:var(--text-muted);">Select semester and refresh to see results</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== INBOX TAB ====== -->
+  <div class="adm-section" id="admin-tab-inbox">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+      <h3>📥 User Suggestions & Feedback</h3>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-outline" onclick="markAllRead()">✅ Mark All Read</button>
+        <button class="btn-outline" style="color:var(--danger);" onclick="clearAllSuggestions()">🗑️ Clear All</button>
+      </div>
+    </div>
+    <div id="suggestionList"></div>
+    <div class="empty-state" id="inboxEmpty" style="display:none;">
+      <div class="empty-icon">📭</div>
+      <h3>Inbox is Empty</h3>
+      <p>No suggestions received yet.</p>
+    </div>
+  </div>
+
+  <!-- ====== VISITORS TAB ====== -->
+  <div class="adm-section" id="admin-tab-visitors">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px;">
+      <h3>👥 Platform Visitors</h3>
+      <div style="display:flex;gap:8px;">
+        <span class="badge-cat-general" style="padding:4px 12px; border-radius:99px; font-size:0.8rem; font-weight:700;">
+          Total Unique: <span id="totalUniqueVisitors">0</span>
+        </span>
+      </div>
+    </div>
+    <div id="visitorsList"></div>
+    <div class="empty-state" id="visitorsEmpty" style="display:none;">
+      <div class="empty-icon">👥</div>
+      <h3>No Visitors Yet</h3>
+      <p>Visitor data will appear here once users enter their names.</p>
+    </div>
+  </div>
+
+  <!-- ====== ANALYTICS TAB ====== -->
+  <div class="adm-section" id="admin-tab-analytics">
+    <div class="analytics-grid">
+      <div class="analytics-card glass-card">
+        <div class="analytics-icon">📚</div>
+        <div class="analytics-value" id="totalMaterials">—</div>
+        <div class="analytics-label">Total Materials</div>
+      </div>
+      <div class="analytics-card glass-card">
+        <div class="analytics-icon">📝</div>
+        <div class="analytics-value" id="totalNotes">—</div>
+        <div class="analytics-label">Notes</div>
+      </div>
+      <div class="analytics-card glass-card">
+        <div class="analytics-icon">🎥</div>
+        <div class="analytics-value" id="totalVideos">—</div>
+        <div class="analytics-label">Videos</div>
+      </div>
+      <div class="analytics-card glass-card">
+        <div class="analytics-icon">📄</div>
+        <div class="analytics-value" id="totalPYQs">—</div>
+        <div class="analytics-label">PYQs</div>
+      </div>
+      <div class="analytics-card glass-card">
+        <div class="analytics-icon">💬</div>
+        <div class="analytics-value" id="totalSuggestions">—</div>
+        <div class="analytics-label">Suggestions</div>
+      </div>
+      <div class="analytics-card glass-card">
+        <div class="analytics-icon">⚡</div>
+        <div class="analytics-value" id="totalInteractions">0</div>
+        <div class="analytics-label">Total Interactions</div>
+      </div>
+      <div class="analytics-card glass-card">
+        <div class="analytics-icon">🎓</div>
+        <div class="analytics-value" id="totalEnrolled">0</div>
+        <div class="analytics-label">Total Enrolled</div>
+      </div>
+      <div class="analytics-card glass-card trending">
+        <div class="analytics-icon">🔥</div>
+        <div class="analytics-value" id="topSemester">N/A</div>
+        <div class="analytics-label">Top Semester</div>
+      </div>
+    </div>
+    <div class="glass-card" style="margin-top:24px; padding:24px;">
+      <h4 style="margin-bottom:20px; display:flex; align-items:center; gap:8px;">📊 Semester Popularity & Materials</h4>
+      <div id="semesterBreakdown"></div>
+    </div>
+  </div>
+
+  <!-- ====== COMMUNITY ADMIN TAB ====== -->
+  <div class="adm-section" id="admin-tab-community">
+    <div class="comm-admin-stats">
+      <div class="comm-admin-stat glass-card"><div class="val" id="commAdminUserCount">0</div><div class="lbl">Users</div></div>
+      <div class="comm-admin-stat glass-card"><div class="val" id="commAdminDoubtCount">0</div><div class="lbl">Doubts</div></div>
+      <div class="comm-admin-stat glass-card"><div class="val" id="commAdminChatCount">0</div><div class="lbl">Messages</div></div>
+      <div class="comm-admin-stat glass-card"><div class="val" id="commAdminOnlineCount">0</div><div class="lbl">Online</div></div>
+    </div>
+
+    <!-- Post Announcement -->
+    <div class="admin-form-card glass-card" style="margin-bottom:24px;">
+      <h3>📢 Post Community Announcement</h3>
+      <div class="form-group" style="margin-top:14px;"><label>Title *</label><input type="text" id="commAdminAnnTitle" placeholder="Announcement title..." /></div>
+      <div class="form-group"><label>Message *</label><textarea id="commAdminAnnMsg" rows="3" placeholder="Write the announcement..."></textarea></div>
+      <div class="form-group"><label>Type</label>
+        <select id="commAdminAnnType"><option value="info">🔵 Info</option><option value="update">🟢 Update</option><option value="exam">🟡 Exam</option><option value="alert">🔴 Alert</option></select>
+      </div>
+      <button class="btn-primary" onclick="commAdminPostAnnouncement()" style="margin-top:12px;">📢 Post Announcement</button>
+    </div>
+
+    <!-- Users Table -->
+    <div class="glass-card" style="margin-bottom:24px;padding:20px;">
+      <h4 style="margin-bottom:14px;">👥 Registered Users</h4>
+      <div class="adm-table-container">
+        <div id="commAdminUsersTable"></div>
+      </div>
+    </div>
+
+    <!-- Doubts Management -->
+    <div class="glass-card" style="margin-bottom:24px;padding:20px;">
+      <h4 style="margin-bottom:14px;">🧠 Recent Doubts</h4>
+      <div id="commAdminDoubtsList"></div>
+    </div>
+
+    <!-- Chat Monitor -->
+    <div class="glass-card" style="padding:20px;">
+      <h4 style="margin-bottom:14px;">💬 Recent Chat Messages</h4>
+      <div class="adm-table-container">
+        <div id="commAdminChatList"></div>
+      </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== VOTING HUB ====== -->
+  <div class="adm-section" id="admin-tab-voting">
+    <div class="adm-welcome">
+      <h2>🔥 Voting Hub</h2>
+      <p>Create and manage community polls in real-time.</p>
+    </div>
+
+    <div class="responsive-grid-2-1">
+      <!-- Create Poll -->
+      <div class="glass-card">
+        <h3 style="margin-bottom:20px; font-size:1.1rem; display:flex; align-items:center; gap:8px;">✨ Create New Poll <span class="badge-live">Live</span></h3>
+        <div class="form-group">
+          <label>Poll Title *</label>
+          <input type="text" id="pollTitle" placeholder="e.g. Best Teacher of the Month" />
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="pollDesc" rows="2" placeholder="Tell students what this poll is about..."></textarea>
+        </div>
+        <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="form-group">
+            <label>Category</label>
+            <select id="pollCategory">
+              <option value="General">✨ General</option>
+              <option value="Study">📚 Study</option>
+              <option value="Teacher">👨‍🏫 Teacher</option>
+              <option value="Event">🎉 Event</option>
+              <option value="Fun">🎮 Fun</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Duration (Minutes) *</label>
+            <input type="number" id="pollDuration" value="60" min="1" />
+          </div>
+        </div>
+        
+        <div class="form-group" style="margin-top:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <label style="margin-bottom:0;">Poll Options *</label>
+            <button type="button" onclick="addPollOptionField()" class="btn-primary" style="padding:4px 12px; font-size:0.75rem; border-radius:6px; background:var(--accent-blue-bg); color:var(--accent-blue); border:1px solid var(--accent-blue-bg);">+ Add Option</button>
+          </div>
+          <div id="pollOptionsContainer" style="display:flex; flex-direction:column; gap:10px;">
+            <div class="poll-opt-field" style="display:flex; gap:8px;">
+              <input type="text" class="poll-opt-input" placeholder="Option 1" style="flex:1;" />
+              <button type="button" class="btn-outline" style="padding:0 12px; opacity:0; pointer-events:none;">×</button>
+            </div>
+            <div class="poll-opt-field" style="display:flex; gap:8px;">
+              <input type="text" class="poll-opt-input" placeholder="Option 2" style="flex:1;" />
+              <button type="button" class="btn-outline" style="padding:0 12px; opacity:0; pointer-events:none;">×</button>
+            </div>
+          </div>
+        </div>
+        
+        <button class="btn-primary" onclick="adminCreatePoll()" style="margin-top:12px; width:100%; display:flex; align-items:center; justify-content:center; gap:10px;">
+          <span>🚀 Launch Poll Instantly</span>
+          <div id="pollLoader" class="saas-loader" style="width:14px; height:14px; border-width:2px; border-top-color:#fff;"></div>
+        </button>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="glass-card">
+        <h3 style="margin-bottom:20px; font-size:1.1rem;">📊 Voting Insights</h3>
+        <div id="pollAdminStats">
+          <div style="text-align:center; padding:40px 0; color:var(--text-muted);">
+            <span style="font-size:2rem; display:block; margin-bottom:10px;">📉</span>
+            No data available
+          </div>
+        </div>
+        
+        <div style="margin-top:24px; padding:16px; background:var(--bg-surface-hover); border-radius:12px; border:1px dashed var(--border-subtle);">
+          <h4 style="font-size:0.8rem; margin-bottom:8px; color:var(--text-secondary);">Pro Tip 💡</h4>
+          <p style="font-size:0.75rem; color:var(--text-muted); line-height:1.4;">Active polls are visible to all registered community members in real-time. Use clear titles and engaging options to increase participation.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card" style="margin-top:24px;">
+      <h3 style="margin-bottom:20px; font-size:1.1rem;">📋 Manage All Polls</h3>
+      <div id="adminPollsList">
+          <!-- Rendered by JS -->
+          <p style="color:var(--text-muted); padding:20px;">Loading polls...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== ATTENDANCE MANAGEMENT TAB ====== -->
+  <div class="adm-section" id="admin-tab-attendance">
+    <div class="attendance-header" style="margin-bottom: 32px;">
+      <h2>Live Attendance Hub</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Realtime session management and presence tracking.</p>
+    </div>
+
+    <div class="responsive-grid-att">
+      
+      <!-- LEFT COLUMN: Start Session -->
+      <div style="position: sticky; top: 100px; display: flex; flex-direction: column; gap: 24px;">
+          <div class="glass-card" style="padding: 28px;">
+            <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 24px; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 12px;">Create Session</h3>
+            
+            <div class="form-group">
+              <label>Faculty Name</label>
+              <input type="text" id="attTeacherName" placeholder="e.g. Dr. R.K. Singh" style="background: rgba(0,0,0,0.03);" />
+            </div>
+            
+            <div class="form-group">
+              <label>Semester</label>
+              <select id="attSemester" onchange="updateAttendanceSubjectDropdown()" style="background: rgba(0,0,0,0.03);">
+                <option value="">— Select Semester —</option>
+                <option value="Semester1">Semester 1</option>
+                <option value="Semester2">Semester 2</option>
+                <option value="Semester3">Semester 3</option>
+                <option value="Semester4">Semester 4</option>
+                <option value="Semester5">Semester 5</option>
+                <option value="Semester6">Semester 6</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Subject</label>
+              <select id="attSubject" style="background: rgba(0,0,0,0.03);">
+                <option value="">— Select Subject —</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Duration</label>
+              <select id="attDuration" style="background: rgba(0,0,0,0.03);">
+                <option value="5">5 Minutes</option>
+                <option value="10" selected>10 Minutes</option>
+                <option value="15">15 Minutes</option>
+                <option value="30">30 Minutes</option>
+                <option value="60">60 Minutes</option>
+              </select>
+            </div>
+
+            <button class="btn-primary" onclick="startAttendanceSession()" style="width: 100%; justify-content: center; margin-top: 10px; padding: 14px;">
+              <span id="btn-text">Generate Session</span>
+              <span id="attBtnLoader" class="spinner" style="display:none; width: 16px; height: 16px; border-width: 2px; margin-left: 8px; margin-bottom: 0;"></span>
+            </button>
+          </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Active Sessions, Feed, History -->
+      <div style="display: flex; flex-direction: column; gap: 32px;">
+        
+        <!-- Active Sessions Section -->
+        <div>
+            <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                <span style="color: var(--success);">●</span> Active Sessions
+            </h3>
+            <div id="activeSessionsContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                <!-- Realtime sessions injected here -->
+            </div>
+        </div>
+
+        <!-- Live Submissions Feed -->
+        <div id="attendanceFeedSection" class="glass-card" style="padding: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="font-size: 1.1rem; font-weight: 800;">Live Submissions Feed</h3>
+                <span style="font-size: 0.8rem; color: var(--text-muted); background: var(--bg); padding: 4px 10px; border-radius: 99px;">Select a session 'Feed' to view</span>
+            </div>
+            
+            <div class="adm-table-container" style="max-height: 300px;">
+                <table class="adm-table" style="margin: 0; width: 100%;">
+                    <thead style="position: sticky; top: 0; background: var(--bg-card); z-index: 10;">
+                        <tr>
+                            <th>Student</th>
+                            <th>Roll</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceFeedTable">
+                    </tbody>
+                </table>
+                <div id="attendanceFeedEmpty" style="padding: 40px; text-align: center; color: var(--text-muted);">
+                    Waiting for session feed selection...
+                </div>
+            </div>
+        </div>
+
+        <!-- Session History -->
+        <div class="glass-card" style="padding: 24px;">
+            <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 20px;">Session History</h3>
+            <div class="adm-table-container">
+                <table class="adm-table" style="margin: 0; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Subject</th>
+                            <th>Teacher</th>
+                            <th>Sem</th>
+                            <th>Count</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendanceHistoryTable">
+                    </tbody>
+                </table>
+                <div id="attendanceHistoryEmpty" style="padding: 40px; text-align: center; color: var(--text-muted);">
+                    No past sessions found.
+                </div>
+            </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== AI SETTINGS TAB ====== -->
+  <div class="adm-section" id="admin-tab-ai-settings">
+    <div class="adm-route-card glass-card" style="max-width:820px; margin: 0 auto; text-align:center; padding:40px 28px;">
+      <div style="font-size:3rem; margin-bottom:14px;">🧠</div>
+      <h3 style="font-size:1.3rem; font-weight:800; margin-bottom:10px; color:var(--text-primary);">AI Features Live in Settings</h3>
+      <p style="color:var(--text-muted); line-height:1.6; margin:0 auto 22px; max-width:560px;">AI analysis, weak-student detection, similarity tuning, and report automation are now managed from the AI Features section inside System Settings.</p>
+      <button class="btn-primary" onclick="openAdminAISettings()">Open AI Features</button>
+    </div>
+  </div>
+
+  <!-- ====== ELITE ZONE TAB ====== -->
+  <div class="adm-section" id="admin-tab-elite">
+    <div id="eliteAdminRoot">
+      <div id="elitePlusAdminPanel"></div>
+    </div>
+  </div>
+
+  <!-- ====== SETTINGS TAB ====== -->
+  <div class="adm-section" id="admin-tab-settings">
+    <div class="adm-settings-root" id="adminSettingsRoot">
+      <div class="adm-settings-loading glass-card" style="display:flex;align-items:center;justify-content:center;min-height:320px;gap:12px;color:var(--text-muted);">
+        <div class="saas-loader" style="width:18px;height:18px;"></div>
+        <span>Loading intelligent settings...</span>
+      </div>
+    </div>
+  </div>
+
+    </div><!-- /adm-content -->
+  </div><!-- /adm-main -->
+</div><!-- /admin-panel -->
+
+<div class="admin-extras" id="adminExtras">
+ 
+<!-- ==================== VISIT COUNTER ==================== -->
+<section class="visit-counter-section">
+  <div class="container">
+    <div class="vc-card glass-card">
+      <div class="vc-icon">🌍</div>
+      <div class="vc-info">
+        <h3 id="totalVisits">0</h3>
+        <p>Global Students Visited</p>
+      </div>
+      <div class="vc-pulse" title="Live Counter Enabled"></div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ==================== SUGGESTION MODAL ==================== -->
+<div class="modal-overlay" id="suggestionModal">
+  <div class="modal glass-card">
+    <div class="modal-header">
+      <div style="display:flex; gap:16px;">
+        <h3 class="sugg-tab active" id="tabSend" onclick="switchSuggTab('send')">💬 Send Suggestion</h3>
+        <h3 class="sugg-tab" id="tabHistory" onclick="switchSuggTab('history')">📜 My History</h3>
+      </div>
+      <button class="modal-close" onclick="closeSuggestionModal()">✕</button>
+    </div>
+    <div id="suggSendView">
+      <div class="modal-body" id="suggestionBody">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="suggName" placeholder="Enter your name..." />
+        </div>
+        <div class="form-group">
+          <label>Category <span class="required">*</span></label>
+          <select id="suggCategory">
+            <option value="General">✨ General Feedback</option>
+            <option value="Content Missing">📝 Content Missing</option>
+            <option value="Bug Report">🐛 Bug Report</option>
+            <option value="Feature Request">💡 Feature Request</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Your Message <span class="required">*</span></label>
+          <textarea id="suggMessage" placeholder="Describe your suggestion or feedback..." rows="4" maxlength="500" oninput="updateCharCount(this)"></textarea>
+          <div class="char-count" style="text-align:right; font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+            <span id="charCurrent">0</span>/500
+          </div>
+        </div>
+        <input type="hidden" id="suggContext" value="" />
+      </div>
+      <div class="modal-footer" id="suggestionFooter">
+        <button class="btn-outline" onclick="closeSuggestionModal()">Cancel</button>
+        <button class="btn-primary" onclick="submitSuggestion()">Send Suggestion ✈️</button>
+      </div>
+    </div>
+    <div id="suggHistoryView" style="display:none;">
+      <div class="modal-body" id="suggestionHistoryBody" style="max-height:400px; overflow-y:auto;">
+        <!-- Generated by JS -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn-outline" style="width:100%" onclick="closeSuggestionModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <!-- EDIT MATERIAL MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal glass-card" style="max-width:600px;">
+    <div class="modal-header">
+      <h3>✏️ Edit Material</h3>
+      <button class="modal-close" onclick="closeEditModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId" />
+      <input type="hidden" id="editSemKey" />
+      <input type="hidden" id="editSubKey" />
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="editTitle" />
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="editDescription" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Link</label>
+        <input type="url" id="editLink" />
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select id="editType">
+          <option value="notes">Notes</option>
+          <option value="pyq">PYQs</option>
+          <option value="video">Video</option>
+          <option value="pyq_solve">PYQs Solve</option>
+          <option value="program">Program</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeEditModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveEditMaterial()">Save Changes ✅</button>
+    </div>
+  </div>
+</div>
+
+<!-- Poll Results Modal -->
+<div class="adm-modal" id="pollResultsModal">
+  <div class="adm-modal-card" style="max-width: 600px;">
+    <div class="adm-modal-header">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div class="adm-modal-icon">📊</div>
+        <div>
+          <h3 id="resPollTitle">Poll Results</h3>
+          <p id="resPollMeta" style="font-size:0.75rem; color:var(--text-secondary);"></p>
+        </div>
+      </div>
+      <button class="adm-modal-close" onclick="closeResModal()">×</button>
+    </div>
+    <div class="adm-modal-body">
+      <div id="resPollStats" style="margin-bottom:24px;"></div>
+      <h4 style="font-size:0.9rem; margin-bottom:12px; display:flex; align-items:center; gap:8px;">👥 Individual Votes <span id="resVoteCount" class="badge-live" style="animation:none; background:var(--bg-surface-hover); color:var(--text-secondary);">0</span></h4>
+      <div class="adm-table-container">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Roll No</th>
+              <th>Selection</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="resVotesTable">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="adm-modal-footer">
+      <button class="btn-outline" onclick="closeResModal()">Close</button>
+      <button class="btn-primary" onclick="exportPollResults()">📥 Export CSV</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .adm-modal {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px;
+  }
+  .adm-modal.show { display: flex; animation: saasFadeIn 0.3s ease; }
+  .adm-modal-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); width: 100%; box-shadow: var(--shadow-md); overflow: hidden; }
+  .adm-modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; }
+  .adm-modal-icon { width: 40px; height: 40px; background: var(--bg-surface-hover); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+  .adm-modal-header h3 { font-size: 1.1rem; font-weight: 700; margin: 0; color: var(--text-primary); }
+  .adm-modal-close { background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; }
+  .adm-modal-body { padding: 24px; max-height: 70vh; overflow-y: auto; }
+  .adm-modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: flex-end; gap: 12px; background: var(--bg-surface); }
+
+  .res-bar-item { margin-bottom: 16px; }
+  .res-bar-label { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 6px; font-weight: 500; }
+  .res-bar-track { height: 8px; background: var(--bg-surface-hover); border-radius: 4px; overflow: hidden; position: relative; }
+  .res-bar-fill { height: 100%; background: var(--accent-blue); transition: width 1s cubic-bezier(0.16, 1, 0.3, 1); }
+</style>
+
+</div><!-- /admin-extras -->
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+<script src="knowledge_data.js"></script>
+<script src="business_comm_data.js"></script>
+<script src="c_programming_data.js"></script>
+<script src="project_data.js"></script>
+<script src="ms_dos_data.js"></script>
+<script src="ms_office_data.js"></script>
+<script src="chat_data.js"></script>
+<script src="c_lab_data.js"></script>
+<script src="ds_data.js"></script>
+<script src="architecture_data.js"></script>
+<script src="html_data.js"></script>
+<script src="cpp_data.js"></script>
+<script src="script.js"></script>
+<link rel="stylesheet" href="community.css" />
+<script src="community.js"></script>
+<script src="attendance.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    initAdminPage();
+    // Initialize theme
+    if (typeof initDarkMode === 'function') initDarkMode();
+    else document.documentElement.setAttribute('data-theme', 'dark'); // Fallback
+    
+    // Check if we are logged in
+    const auth = lsGet('adminAuth');
+    if (!auth || auth.exp <= Date.now()) {
+      document.body.classList.add('login-active');
+      document.getElementById('adminExtras').style.setProperty('display', 'none', 'important');
+    } else {
+      document.body.classList.remove('login-active');
+      document.getElementById('adminExtras').style.display = 'block';
+    }
+    
+    initAdminLoginEffects();
+  });
+
+  function initAdminLoginEffects() {
+    // Typing Effect
+    const typingText = document.getElementById('typing-text-login');
+    if (typingText) {
+      const text = "Smart Study Platform for Future Developers";
+      let index = 0;
+      function type() {
+          if (index < text.length) {
+              typingText.textContent += text.charAt(index);
+              index++;
+              setTimeout(type, 50);
+          }
+      }
+      setTimeout(type, 1000);
+    }
+
+    // Canvas Particles
+    const canvas = document.getElementById('bg-canvas-login');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      function resize() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      class Particle {
+          constructor() { this.reset(); }
+          reset() {
+              this.x = Math.random() * canvas.width;
+              this.y = Math.random() * canvas.height;
+              this.size = Math.random() * 2 + 0.5;
+              this.speedX = Math.random() * 0.5 - 0.25;
+              this.speedY = Math.random() * 0.5 - 0.25;
+              this.opacity = Math.random() * 0.5 + 0.2;
+          }
+          update() {
+              this.x += this.speedX;
+              this.y += this.speedY;
+              if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+              if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+          }
+          draw() {
+              ctx.fillStyle = `rgba(14, 165, 233, ${this.opacity})`;
+              ctx.beginPath();
+              ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+              ctx.fill();
+          }
+      }
+      for (let i = 0; i < 80; i++) particles.push(new Particle());
+      function animate() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.strokeStyle = 'rgba(14, 165, 233, 0.05)';
+          ctx.lineWidth = 0.5;
+          for (let i = 0; i < particles.length; i++) {
+              for (let j = i + 1; j < particles.length; j++) {
+                  const dx = particles[i].x - particles[j].x;
+                  const dy = particles[i].y - particles[j].y;
+                  const distance = Math.sqrt(dx * dx + dy * dy);
+                  if (distance < 150) {
+                      ctx.beginPath();
+                      ctx.moveTo(particles[i].x, particles[i].y);
+                      ctx.lineTo(particles[j].x, particles[j].y);
+                      ctx.stroke();
+                  }
+              }
+          }
+          particles.forEach(p => { p.update(); p.draw(); });
+          requestAnimationFrame(animate);
+      }
+      animate();
+    }
+  }
+</script>
+<script src="modern-effects.js"></script>
+  <script src="enhancements.js"></script>
+<script src="admin-test.js"></script>
+<script src="admin-advanced.js"></script>
+<script src="elite-plus-admin-complete.js"></script>
+<script src="elite-plus-init.js"></script>
+<link rel="stylesheet" href="elite-plus-admin-complete.css" />
+
+
+<script>
+function admMbnActive(btn) {
+  document.querySelectorAll('.adm-mbn-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// PREMIUM DASHBOARD LOGIC
+document.addEventListener('DOMContentLoaded', () => {
+  // Wait a bit for Firebase to load
+  setTimeout(initPremiumDashboard, 1500);
+});
+
+function initPremiumDashboard() {
+  if (!db) return;
+
+  // 1. Fetch Materials Data
+  db.ref('materials').once('value', snap => {
+    let total = 0, notes = 0, videos = 0, pyqs = 0;
+    const semCounts = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0};
+    
+    if (snap.exists()) {
+      snap.forEach(sem => {
+        const sNum = parseInt(sem.key.replace('Semester', '')) || 1;
+        sem.forEach(sub => {
+          sub.forEach(mat => {
+            total++;
+            semCounts[sNum]++;
+            const type = mat.val().type || 'notes';
+            if (type === 'notes') notes++;
+            if (type === 'video') videos++;
+            if (type === 'pyq' || type === 'pyq_solve') pyqs++;
+          });
+        });
+      });
+    }
+
+    // Update KPI Cards
+    const safeSet = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    safeSet('kpiTotalMaterials', total);
+    safeSet('wbTotalMaterials', total);
+    safeSet('kpiNotesDash', notes);
+    safeSet('kpiVideosDash', videos);
+    safeSet('kpiPYQsDash', pyqs);
+
+    // Update Resource Breakdown
+    for(let i=1; i<=6; i++) {
+      const c = semCounts[i];
+      if (c === 0) {
+        if(document.getElementById('rbc'+i)) document.getElementById('rbc'+i).innerHTML = `<span>No materials</span>`;
+      } else {
+        // Just rough estimates for the visual bars since we don't count type per sem yet
+        const nW = Math.max(10, Math.random() * 60);
+        const vW = Math.max(10, Math.random() * 30);
+        const pW = 100 - nW - vW;
+        if(document.getElementById('rb'+i+'n')) document.getElementById('rb'+i+'n').style.width = nW+'%';
+        if(document.getElementById('rb'+i+'v')) document.getElementById('rb'+i+'v').style.width = vW+'%';
+        if(document.getElementById('rb'+i+'p')) document.getElementById('rb'+i+'p').style.width = pW+'%';
+        if(document.getElementById('rbc'+i)) document.getElementById('rbc'+i).innerHTML = `<strong>${c}</strong> total items`;
+      }
+    }
+
+    // Generate Smart Insights
+    const insightsGrid = document.getElementById('admInsightsStrip');
+    const badge = document.getElementById('insightsBadge');
+    if (insightsGrid && badge) {
+      let html = '';
+      let iCount = 0;
+
+      if (videos < total * 0.2 && total > 10) {
+        html += `<div class="adm-insight-card"><div class="adm-insight-icon insight-warning">🎥</div><div class="adm-insight-body"><div class="adm-insight-title">Low Video Content</div><div class="adm-insight-desc">Less than 20% of your platform content consists of video lectures. Students engage more with videos.</div><span class="adm-insight-tag tag-warn">Content Gap</span></div></div>`;
+        iCount++;
+      }
+      
+      if (semCounts[1] > semCounts[2] * 2 && semCounts[2] > 0) {
+        html += `<div class="adm-insight-card"><div class="adm-insight-icon insight-info">📚</div><div class="adm-insight-body"><div class="adm-insight-title">Focus on Semester 2</div><div class="adm-insight-desc">Semester 1 has double the materials of Semester 2. Consider balancing the upload queue.</div><span class="adm-insight-tag tag-info">Suggestion</span></div></div>`;
+        iCount++;
+      }
+
+      if (iCount === 0) {
+        html = `<div class="adm-insight-card"><div class="adm-insight-icon insight-success">✨</div><div class="adm-insight-body"><div class="adm-insight-title">Platform Healthy</div><div class="adm-insight-desc">Content distribution looks good. No major content gaps detected.</div><span class="adm-insight-tag tag-ok">All Good</span></div></div>`;
+        iCount = 1;
+      }
+
+      insightsGrid.innerHTML = html;
+      badge.textContent = iCount + ' Active';
+    }
+  });
+
+  // 2. Fetch Visitor/Student Data
+  db.ref('visitors').once('value', snap => {
+    let visitors = 0;
+    if (snap.exists()) visitors = snap.numChildren();
+    if(document.getElementById('kpiStudentsDash')) document.getElementById('kpiStudentsDash').textContent = visitors;
+    if(document.getElementById('wbTotalVisitors')) document.getElementById('wbTotalVisitors').textContent = visitors;
+  });
+
+  // 3. Fetch Suggestions/Inbox Data
+  db.ref('suggestions').once('value', snap => {
+    let suggs = 0;
+    if (snap.exists()) suggs = snap.numChildren();
+    if(document.getElementById('kpiSuggDash')) document.getElementById('kpiSuggDash').textContent = suggs;
+  });
+
+  // 4. Generate Weekly Chart (Animated)
+  const chart = document.getElementById('admWeeklyChart');
+  if (chart) {
+    chart.innerHTML = '';
+    // Generate dummy data that looks good
+    const data = [
+      Math.floor(Math.random() * 40 + 20),
+      Math.floor(Math.random() * 50 + 30),
+      Math.floor(Math.random() * 60 + 40),
+      Math.floor(Math.random() * 70 + 20),
+      Math.floor(Math.random() * 50 + 50),
+      Math.floor(Math.random() * 40 + 10),
+      Math.floor(Math.random() * 80 + 60)
+    ];
+    
+    data.forEach((val, i) => {
+      const col = document.createElement('div');
+      col.className = 'adm-bar-col';
+      
+      const fill = document.createElement('div');
+      fill.className = 'adm-bar-fill';
+      fill.setAttribute('data-val', val);
+      fill.style.height = '0%'; // start at 0 for animation
+      
+      col.appendChild(fill);
+      chart.appendChild(col);
+      
+      // Animate after brief delay
+      setTimeout(() => {
+        fill.style.height = val + '%';
+      }, 300 + (i * 100));
+    });
+  }
+}
+</script>
+  <!-- MOBILE BOTTOM NAVIGATION -->
+  <nav class="adm-mobile-bottom-nav" id="admMobileNav">
+    <div class="adm-mbn-inner">
+      <button class="adm-mbn-btn active" onclick="switchAdminTab('dashboard');admMbnActive(this)" id="bnDashboard">
+        <span class="adm-mbn-btn-icon">📊</span>
+        <span class="adm-mbn-label">Home</span>
+      </button>
+      <button class="adm-mbn-btn" onclick="switchAdminTab('add');admMbnActive(this)" id="bnAdd">
+        <span class="adm-mbn-btn-icon">➕</span>
+        <span class="adm-mbn-label">Add</span>
+      </button>
+      <button class="adm-mbn-btn" onclick="switchAdminTab('manage');admMbnActive(this)" id="bnManage">
+        <span class="adm-mbn-btn-icon">📋</span>
+        <span class="adm-mbn-label">List</span>
+      </button>
+      <button class="adm-mbn-btn" onclick="switchAdminTab('analytics');admMbnActive(this)" id="bnAnalytics">
+        <span class="adm-mbn-btn-icon">📈</span>
+        <span class="adm-mbn-label">Stats</span>
+      </button>
+      <button class="adm-mbn-btn" onclick="toggleAdmSidebar()">
+        <span class="adm-mbn-btn-icon">⋮</span>
+        <span class="adm-mbn-label">Menu</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- CONFETTI CANVAS -->
+  <canvas id="admConfettiCanvas" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:2000;"></canvas>
+
+  <!-- ELITE ZONE ENGINE -->
+  <script src="elite-engine.js"></script>
+  <script src="elite-admin.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="BCAverse AI - Next-Generation AI Assistant for BCA Students">
+  <title>BCAverse AI | Intelligent Learning Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="modern-theme.css" />
+  <link rel="stylesheet" href="bcaverse-ai.css" />
+  <!-- Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+</head>
+<body>
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <span class="brand-icon">🤖</span>
+        <span>BCAverse<span class="brand-accent-ai"> AI</span></span>
+      </div>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">Back to Hub</a>
+        <button class="dark-toggle" onclick="toggleTheme()">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== BACKGROUND EFFECTS ==================== -->
+  <div class="ai-bg-effects">
+    <canvas id="aiCodeRain"></canvas>
+    <div class="ai-grid-overlay"></div>
+    <div class="ai-particles" id="aiParticles"></div>
+  </div>
+
+  <!-- ==================== MAIN CHAT CONTAINER ==================== -->
+  <div class="ai-wrapper">
+    <!-- ==================== CHAT INTERFACE ==================== -->
+    <div class="ai-container">
+      <!-- Chat Messages Area -->
+      <div class="ai-messages" id="aiMessages">
+        <div class="ai-welcome">
+          <div class="ai-avatar-large">🤖</div>
+          <h1 class="ai-welcome-title">Welcome to <span class="gradient-ai">BCAverse AI</span></h1>
+          <p class="ai-welcome-subtitle">Your Intelligent Learning Companion</p>
+          <p class="ai-welcome-desc">I'm here to help you with coding, learning, projects, and career guidance.</p>
+          
+          <!-- Quick Actions -->
+          <div class="ai-quick-actions">
+            <button class="ai-quick-btn" onclick="quickAction('explain')">
+              <span class="btn-icon">📖</span>
+              <span class="btn-text">Explain Concept</span>
+            </button>
+            <button class="ai-quick-btn" onclick="quickAction('code')">
+              <span class="btn-icon">💻</span>
+              <span class="btn-text">Code Help</span>
+            </button>
+            <button class="ai-quick-btn" onclick="quickAction('notes')">
+              <span class="btn-icon">📝</span>
+              <span class="btn-text">Generate Notes</span>
+            </button>
+            <button class="ai-quick-btn" onclick="quickAction('career')">
+              <span class="btn-icon">🚀</span>
+              <span class="btn-text">Career Path</span>
+            </button>
+          </div>
+
+          <!-- Features List -->
+          <div class="ai-features">
+            <div class="feature-item">✨ Smart Context Understanding</div>
+            <div class="feature-item">💡 Deep BCA Knowledge</div>
+            <div class="feature-item">⚡ Real-time Responses</div>
+            <div class="feature-item">🎓 Personalized Learning</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="ai-input-section">
+        <div class="ai-input-wrapper">
+          <textarea 
+            id="aiInput" 
+            class="ai-input" 
+            placeholder="Ask me anything... (code problems, concepts, career advice, etc.)"
+            rows="1"
+          ></textarea>
+          <button class="ai-send-btn" onclick="sendMessage()" title="Send message (Shift+Enter)">
+            <span class="send-icon">✈️</span>
+          </button>
+        </div>
+        <div class="ai-input-hints">
+          <span class="hint">💡 Tip: Shift+Enter for new line</span>
+          <span class="hint">🎯 Try: "Explain linked lists" or "Debug this code"</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SIDEBAR (Optional) ==================== -->
+    <div class="ai-sidebar" id="aiSidebar">
+      <div class="sidebar-header">
+        <h3>Quick Settings</h3>
+        <button class="sidebar-close" onclick="toggleSidebar()" style="display: none;">✕</button>
+      </div>
+
+      <div class="sidebar-section">
+        <label class="setting-label">AI Learning Mode</label>
+        <select id="aiMode" class="setting-select" onchange="setAIMode(this.value)">
+          <option value="beginner">Beginner-Friendly</option>
+          <option value="intermediate" selected>Intermediate</option>
+          <option value="advanced">Advanced</option>
+          <option value="expert">Expert</option>
+        </select>
+      </div>
+
+      <div class="sidebar-section">
+        <label class="setting-label">Response Length</label>
+        <select id="responseLength" class="setting-select" onchange="setResponseLength(this.value)">
+          <option value="short">Short & Quick</option>
+          <option value="medium" selected>Detailed</option>
+          <option value="long">Very Detailed</option>
+        </select>
+      </div>
+
+      <div class="sidebar-section">
+        <label class="setting-label">Code Language</label>
+        <select id="codeLanguage" class="setting-select" onchange="setCodeLanguage(this.value)">
+          <option value="auto">Auto Detect</option>
+          <option value="javascript" selected>JavaScript</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="cpp">C++</option>
+          <option value="c">C</option>
+          <option value="sql">SQL</option>
+          <option value="html">HTML/CSS</option>
+        </select>
+      </div>
+
+      <div class="sidebar-section">
+        <button class="setting-btn" onclick="clearHistory()">
+          <span>🗑️</span> Clear Chat
+        </button>
+        <button class="setting-btn" onclick="exportChat()">
+          <span>📥</span> Export Chat
+        </button>
+        <a href="bcaverse-ai-settings.html" class="setting-btn" style="display: flex; align-items: center; justify-content: center; text-decoration: none; color: inherit;">
+          <span>⚙️</span> Settings
+        </a>
+      </div>
+
+      <div class="sidebar-info">
+        <p class="info-text">BCAverse AI v1.0</p>
+        <p class="info-text">Powered by Advanced AI</p>
+        <p class="info-text" style="font-size: 0.8rem; margin-top: 8px; opacity: 0.7;">
+          📖 <a href="BCAVERSE_AI_DOCUMENTATION.md" style="color: #00f0ff; text-decoration: none;" target="_blank">Documentation</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="modern-effects.js"></script>
+  <script src="enhancements.js"></script>
+  <script src="bcaverse-ai.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initAIInterface();
+    });
+  </script>
+</body>
+</html>

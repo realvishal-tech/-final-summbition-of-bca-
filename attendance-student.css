@@ -1,0 +1,649 @@
+/* ================================================
+   Attendance Student Page CSS
+   Clean, Modern, Mobile-Optimized
+   ================================================ */
+
+:root {
+  --primary: #00f0ff;
+  --secondary: #b000ff;
+  --tertiary: #0080ff;
+  --background: #020817;
+  --surface: rgba(12, 26, 46, 0.95);
+  --surface-light: rgba(15, 23, 42, 0.9);
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border: rgba(0, 240, 255, 0.2);
+  --success: #10b981;
+  --error: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(135deg, var(--background) 0%, #0a1128 100%);
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==================== LOADING OVERLAY ==================== */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(2, 8, 23, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(0, 240, 255, 0.2);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-spinner p {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* ==================== CONTAINER LAYOUT ==================== */
+.student-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--background) 0%, #0a1128 100%);
+}
+
+/* ==================== HEADER ==================== */
+.student-header {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-light) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+  backdrop-filter: blur(20px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.title-icon {
+  font-size: 1.6rem;
+}
+
+.connection-badge {
+  padding: 8px 12px;
+  background: rgba(16, 185, 129, 0.1);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--success);
+}
+
+.connection-badge.disconnected {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error);
+}
+
+/* ==================== MAIN CONTENT ==================== */
+.student-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* ==================== SESSION CARD ==================== */
+.session-card {
+  width: 100%;
+  max-width: 600px;
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-light) 100%);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 40px rgba(0, 240, 255, 0.1);
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.session-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.subject-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.session-status {
+  padding: 8px 16px;
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.session-status.active {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+}
+
+.session-status.expired {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--error);
+}
+
+/* ==================== SESSION DETAILS GRID ==================== */
+.session-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.detail {
+  background: rgba(0, 240, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.detail-label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.detail-value {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+/* ==================== COUNTDOWN TIMER ==================== */
+.countdown-section {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.countdown-timer {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(176, 0, 255, 0.1));
+  border: 2px solid var(--primary);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.timer-value {
+  font-size: 3rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-variant-numeric: tabular-nums;
+}
+
+.timer-label {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+.timer-progress {
+  height: 4px;
+  background: rgba(0, 240, 255, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  width: 100%;
+  transition: width 1s linear;
+}
+
+/* ==================== ATTENDANCE FORM ==================== */
+.attendance-form {
+  width: 100%;
+}
+
+.form-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 24px;
+  color: var(--text-primary);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input::placeholder {
+  color: rgba(148, 163, 184, 0.5);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: rgba(0, 240, 255, 0.05);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+}
+
+.form-hint {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-actions {
+  margin-top: 28px;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--primary), var(--tertiary));
+  color: #000;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+}
+
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 0 50px rgba(0, 240, 255, 0.6);
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-submit:active {
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  padding: 12px 24px;
+  background: rgba(0, 240, 255, 0.1);
+  color: var(--primary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 240, 255, 0.2);
+  border-color: var(--primary);
+}
+
+.btn-primary {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--primary), var(--tertiary));
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+}
+
+/* ==================== OVERLAY STYLES ==================== */
+.success-overlay,
+.error-overlay,
+.expired-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(2, 8, 23, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(10px);
+  animation: fadeIn 0.3s ease;
+}
+
+.success-content,
+.error-content,
+.expired-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  max-width: 400px;
+  animation: popIn 0.4s ease;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.success-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.expired-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.success-content h2,
+.error-content h2,
+.expired-content h2 {
+  font-size: 1.8rem;
+  margin: 0 0 12px 0;
+}
+
+.success-content p,
+.error-content p,
+.expired-content p {
+  color: var(--text-secondary);
+  margin: 12px 0;
+  line-height: 1.6;
+}
+
+.success-details {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 16px 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.success-content button,
+.error-content button,
+.expired-content button {
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* ==================== TIPS SECTION ==================== */
+.tips-section {
+  margin-top: 40px;
+  max-width: 600px;
+  background: rgba(0, 240, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.tips-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.tips-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tips-section li {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* ==================== FOOTER ==================== */
+.student-footer {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .student-main {
+    padding: 20px 16px;
+  }
+
+  .session-card {
+    padding: 24px;
+    border-radius: 16px;
+  }
+
+  .session-card-header {
+    flex-direction: column;
+  }
+
+  .subject-title {
+    font-size: 1.6rem;
+  }
+
+  .session-details-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .timer-value {
+    font-size: 2.2rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .success-content,
+  .error-content,
+  .expired-content {
+    margin: 20px;
+  }
+
+  .tips-section {
+    max-width: 100%;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .student-main {
+    padding: 16px 12px;
+  }
+
+  .session-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .subject-title {
+    font-size: 1.3rem;
+  }
+
+  .session-details-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .detail {
+    padding: 12px;
+  }
+
+  .timer-value {
+    font-size: 1.8rem;
+  }
+
+  .countdown-timer {
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 12px 14px;
+  }
+
+  .form-hint {
+    display: none;
+  }
+
+  .btn-submit {
+    padding: 14px;
+    font-size: 1rem;
+  }
+}

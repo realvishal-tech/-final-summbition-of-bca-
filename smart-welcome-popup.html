@@ -1,0 +1,271 @@
+<!-- ================================================
+     Smart Welcome Popup Modal Component
+     Modern, Premium, Dynamic Greeting System
+     ================================================ -->
+
+<div class="smart-welcome-overlay" id="smartWelcomeOverlay">
+  <div class="smart-welcome-modal" id="smartWelcomeModal">
+    
+    <!-- Background Elements -->
+    <div class="popup-bg-blur"></div>
+    <div class="popup-ambient-glow"></div>
+    
+    <!-- Close Button -->
+    <button class="popup-close-btn" id="closeWelcomePopup" aria-label="Close welcome popup">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <!-- Main Content Container -->
+    <div class="popup-content-wrapper">
+      
+      <!-- Greeting Section -->
+      <div class="greeting-section">
+        <!-- Dynamic Greeting Icon -->
+        <div class="greeting-icon" id="greetingIcon">
+          <span class="icon-emoji" id="greetingEmoji">🌞</span>
+        </div>
+
+        <!-- Dynamic Greeting Text -->
+        <div class="greeting-text">
+          <p class="greeting-time-based" id="timeBasedGreeting">Good Morning, Vishal!</p>
+          <p class="greeting-subtext" id="greetingSubtext">Ready to learn something amazing today?</p>
+        </div>
+      </div>
+
+      <!-- Primary Title -->
+      <div class="welcome-title-section">
+        <h1 class="welcome-main-title">
+          Welcome to <span class="brand-highlight">BCA Study Hub</span> 🚀
+        </h1>
+      </div>
+
+      <!-- Motivational Quote -->
+      <div class="motivation-section">
+        <div class="quote-container">
+          <svg class="quote-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 21c3 0 7-1 7-8V5c0-1.25-4.716-5-7-5-1 0-2 1-2 2s1 2 2 2c1-1 2-1 3-1v4c0 1-1 2-2 2s-1 .008-1 1.031V15c0 1 0 2 2 2 3 0 4 2 4 6.5 0 1-1.5 2-2.5 2z"/>
+          </svg>
+          <p class="motivation-quote" id="motivationQuote">
+            Small progress every day leads to big success.
+          </p>
+          <svg class="quote-icon quote-icon-end" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 3c0-1-1-2-2-2s-2 1-2 2c0 1 1 2 2 2s2-1 2-2zm0 4c-3 0-4-2-4-6.5 0-1.5 1.5-2 2.5-2 1 0 2-1 2-2s1-2 2-2 1 1 1 2v10c0 6-1 8-4 8-2 0-2-1-2-2s1-1 1-1.031C19 14 19 14 20 13c1 0 2-1 2-2V7z"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="quick-actions-section">
+        <p class="actions-label">Quick Start</p>
+        <div class="quick-actions-grid">
+          <button class="quick-action-btn" id="continueBtn" onclick="navigateToPage('continue')">
+            <span class="action-icon">📚</span>
+            <span class="action-text">Continue Learning</span>
+          </button>
+          <button class="quick-action-btn" id="attendanceBtn" onclick="navigateToPage('attendance')">
+            <span class="action-icon">✅</span>
+            <span class="action-text">Mark Attendance</span>
+          </button>
+          <button class="quick-action-btn" id="notesBtn" onclick="navigateToPage('notes')">
+            <span class="action-icon">📝</span>
+            <span class="action-text">Explore Notes</span>
+          </button>
+          <button class="quick-action-btn" id="lecturesBtn" onclick="navigateToPage('lectures')">
+            <span class="action-icon">🎥</span>
+            <span class="action-text">Watch Lectures</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Study Streak Display (Optional) -->
+      <div class="study-streak-display">
+        <div class="streak-item">
+          <span class="streak-label">Today's Date</span>
+          <span class="streak-value" id="todayDate">May 12, 2026</span>
+        </div>
+        <div class="streak-separator"></div>
+        <div class="streak-item">
+          <span class="streak-label">Study Streak</span>
+          <span class="streak-value" id="studyStreak">5 days 🔥</span>
+        </div>
+      </div>
+
+      <!-- Main CTA Button -->
+      <button class="popup-main-cta" id="startExploringBtn" onclick="closeWelcomePopup()">
+        Start Exploring
+      </button>
+
+      <!-- Footer Message -->
+      <div class="popup-footer-message">
+        <p>💡 Tip: You can access this popup anytime from the help menu</p>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ================================================
+     Inline Script for Popup Control
+     ================================================ -->
+<script>
+  // Initialize popup on page load or show it
+  function initSmartWelcomePopup() {
+    // Check if user wants to see popup (can be customized)
+    const shouldShowPopup = !sessionStorage.getItem('welcomePopupClosed');
+    
+    if (shouldShowPopup) {
+      showWelcomePopup();
+      updateDynamicGreeting();
+      updateMotivationalQuote();
+      updateStudyInfo();
+    }
+  }
+
+  // Show popup with animation
+  function showWelcomePopup() {
+    const overlay = document.getElementById('smartWelcomeOverlay');
+    const modal = document.getElementById('smartWelcomeModal');
+    
+    if (overlay) {
+      overlay.classList.add('show');
+      modal.classList.add('show');
+    }
+  }
+
+  // Close popup with animation
+  function closeWelcomePopup() {
+    const overlay = document.getElementById('smartWelcomeOverlay');
+    const modal = document.getElementById('smartWelcomeModal');
+    
+    if (overlay && modal) {
+      overlay.classList.remove('show');
+      modal.classList.remove('show');
+      sessionStorage.setItem('welcomePopupClosed', 'true');
+    }
+  }
+
+  // Update dynamic greeting based on time
+  function updateDynamicGreeting() {
+    const hour = new Date().getHours();
+    let greeting, subtext, emoji;
+
+    if (hour >= 5 && hour < 12) {
+      greeting = "Good Morning, Vishal!";
+      subtext = "Ready to learn something amazing today?";
+      emoji = "🌞";
+    } else if (hour >= 12 && hour < 17) {
+      greeting = "Good Afternoon, Vishal!";
+      subtext = "Keep your momentum strong and stay productive.";
+      emoji = "☀️";
+    } else if (hour >= 17 && hour < 21) {
+      greeting = "Good Evening, Vishal!";
+      subtext = "Time for focused learning and smart progress.";
+      emoji = "🌇";
+    } else {
+      greeting = "Good Night, Vishal!";
+      subtext = "Late-night learners build powerful futures.";
+      emoji = "🌙";
+    }
+
+    const greetingEl = document.getElementById('timeBasedGreeting');
+    const subtextEl = document.getElementById('greetingSubtext');
+    const emojiEl = document.getElementById('greetingEmoji');
+
+    if (greetingEl) greetingEl.textContent = greeting;
+    if (subtextEl) subtextEl.textContent = subtext;
+    if (emojiEl) emojiEl.textContent = emoji;
+  }
+
+  // Update motivational quote
+  function updateMotivationalQuote() {
+    const quotes = [
+      "Small progress every day leads to big success.",
+      "Learn smart. Build faster. Grow stronger.",
+      "Your future starts with what you learn today.",
+      "One lecture closer to your dream career.",
+      "Consistency is the key to mastery.",
+      "Every minute of study is an investment in your future.",
+      "Success is not a destination, it's a journey.",
+      "Challenge yourself to be better every single day.",
+      "Your education is your most valuable asset.",
+      "Small steps today, giant leaps tomorrow."
+    ];
+
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+    const quoteEl = document.getElementById('motivationQuote');
+    
+    if (quoteEl) {
+      quoteEl.style.opacity = '0';
+      setTimeout(() => {
+        quoteEl.textContent = randomQuote;
+        quoteEl.style.opacity = '1';
+      }, 200);
+    }
+  }
+
+  // Update study info (date and streak)
+  function updateStudyInfo() {
+    // Update today's date
+    const today = new Date();
+    const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const todayDate = today.toLocaleDateString('en-US', dateOptions);
+    
+    const dateEl = document.getElementById('todayDate');
+    if (dateEl) dateEl.textContent = todayDate;
+
+    // Update study streak (can be fetched from localStorage)
+    const streakData = localStorage.getItem('studyStreak') || '5';
+    const streakEl = document.getElementById('studyStreak');
+    if (streakEl) streakEl.textContent = `${streakData} days 🔥`;
+  }
+
+  // Navigate to different sections
+  function navigateToPage(section) {
+    closeWelcomePopup();
+    
+    switch(section) {
+      case 'continue':
+        window.location.href = '/semester.html?sem=1';
+        break;
+      case 'attendance':
+        window.location.href = '/attendance-admin.html';
+        break;
+      case 'notes':
+        window.location.href = '/semester.html?notes=true';
+        break;
+      case 'lectures':
+        window.location.href = '/semester.html?lectures=true';
+        break;
+    }
+  }
+
+  // Event Listeners
+  document.addEventListener('DOMContentLoaded', function() {
+    const closeBtn = document.getElementById('closeWelcomePopup');
+    const overlay = document.getElementById('smartWelcomeOverlay');
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeWelcomePopup);
+    }
+
+    // Close on overlay click (outside modal)
+    if (overlay) {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+          closeWelcomePopup();
+        }
+      });
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeWelcomePopup();
+      }
+    });
+  });
+</script>

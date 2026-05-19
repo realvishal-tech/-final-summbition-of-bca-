@@ -1,0 +1,312 @@
+<!-- BCAverse AI API Configuration -->
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BCAverse AI Settings | Configuration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="modern-theme.css" />
+  <style>
+    .settings-container {
+      max-width: 600px;
+      margin: 120px auto 40px;
+      padding: 40px;
+      background: linear-gradient(135deg, rgba(12, 26, 46, 0.95) 0%, rgba(15, 23, 42, 0.9) 100%);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .settings-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #00f0ff 0%, #0080ff 50%, #b000ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .settings-subtitle {
+      color: #94a3b8;
+      margin-bottom: 32px;
+    }
+
+    .setting-group {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+    }
+
+    .setting-label {
+      display: block;
+      margin-bottom: 12px;
+      font-weight: 700;
+      color: #f1f5f9;
+    }
+
+    .setting-description {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-bottom: 12px;
+    }
+
+    .setting-input,
+    .setting-select {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 12px;
+      color: #f1f5f9;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .setting-input:focus,
+    .setting-select:focus {
+      outline: none;
+      border-color: rgba(0, 240, 255, 0.6);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+    }
+
+    .setting-hint {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-top: 8px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .btn-save,
+    .btn-back {
+      flex: 1;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-save {
+      background: linear-gradient(135deg, #00f0ff 0%, #0080ff 50%, #b000ff 100%);
+      color: #000;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+    }
+
+    .btn-save:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.8);
+    }
+
+    .btn-back {
+      background: rgba(255, 255, 255, 0.05);
+      color: #f1f5f9;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+    }
+
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(0, 240, 255, 0.4);
+    }
+
+    .info-box {
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+
+    .info-title {
+      font-weight: 700;
+      color: #00f0ff;
+      margin-bottom: 8px;
+    }
+
+    .info-text {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">
+        <span class="brand-icon">🤖</span>
+        <span>BCAverse AI Settings</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">← Back Home</a>
+        <button class="dark-toggle" id="darkToggle" title="Toggle Dark Mode">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== SETTINGS CONTAINER ==================== -->
+  <div class="settings-container">
+    <h1 class="settings-title">🤖 BCAverse AI Settings</h1>
+    <p class="settings-subtitle">Configure your AI assistant preferences</p>
+
+    <!-- Information Box -->
+    <div class="info-box">
+      <div class="info-title">ℹ️ About</div>
+      <div class="info-text">
+        BCAverse AI works perfectly without any configuration. However, for enhanced capabilities with GPT-4 responses, 
+        you can optionally connect your OpenAI API key.
+      </div>
+    </div>
+
+    <form id="settingsForm" onsubmit="saveSettings(event)">
+      <!-- OpenAI API Configuration -->
+      <div class="setting-group">
+        <label class="setting-label">OpenAI API Key (Optional)</label>
+        <div class="setting-description">
+          Enable advanced GPT-4 responses. Get your key from <a href="https://platform.openai.com/api-keys" target="_blank" style="color: #00f0ff;">platform.openai.com</a>
+        </div>
+        <input 
+          type="password" 
+          id="openaiKey" 
+          class="setting-input" 
+          placeholder="sk-..." 
+          autocomplete="off"
+        />
+        <div class="setting-hint">
+          🔒 Your key is stored only in your browser's local storage. Never shared with anyone.
+        </div>
+      </div>
+
+      <!-- AI Mode -->
+      <div class="setting-group">
+        <label class="setting-label" for="aiMode">Default AI Learning Mode</label>
+        <div class="setting-description">
+          How detailed and technical should responses be?
+        </div>
+        <select id="aiMode" class="setting-select">
+          <option value="beginner">Beginner-Friendly (Simple explanations with analogies)</option>
+          <option value="intermediate" selected>Intermediate (Balanced depth with examples)</option>
+          <option value="advanced">Advanced (Technical with depth)</option>
+          <option value="expert">Expert (Very technical, optimizations, edge cases)</option>
+        </select>
+      </div>
+
+      <!-- Default Response Length -->
+      <div class="setting-group">
+        <label class="setting-label" for="responseLength">Default Response Length</label>
+        <select id="responseLength" class="setting-select">
+          <option value="short">Short & Quick (Quick answers)</option>
+          <option value="medium" selected>Detailed (Balanced depth)</option>
+          <option value="long">Very Detailed (Comprehensive answers)</option>
+        </select>
+      </div>
+
+      <!-- Default Code Language -->
+      <div class="setting-group">
+        <label class="setting-label" for="codeLanguage">Preferred Code Language</label>
+        <select id="codeLanguage" class="setting-select">
+          <option value="auto">Auto Detect</option>
+          <option value="javascript" selected>JavaScript</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="cpp">C++</option>
+          <option value="c">C</option>
+          <option value="sql">SQL</option>
+          <option value="html">HTML/CSS</option>
+        </select>
+      </div>
+
+      <!-- Theme Preference -->
+      <div class="setting-group">
+        <label class="setting-label" for="theme">Theme</label>
+        <select id="theme" class="setting-select">
+          <option value="auto" selected>Auto (System preference)</option>
+          <option value="dark">Dark Mode</option>
+          <option value="light">Light Mode</option>
+        </select>
+      </div>
+
+      <!-- Data & Privacy -->
+      <div class="setting-group">
+        <label class="setting-label">
+          <input type="checkbox" id="analyticsEnabled" checked />
+          Enable Analytics (helps improve AI)
+        </label>
+      </div>
+
+      <!-- Buttons -->
+      <div class="button-group">
+        <button type="submit" class="btn-save">💾 Save Settings</button>
+        <button type="button" class="btn-back" onclick="window.location.href='bcaverse-ai.html'">
+          ← Go to BCAverse AI
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Scripts -->
+  <script src="modern-effects.js"></script>
+  <script>
+    // Load settings on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      const settings = JSON.parse(localStorage.getItem('bcaverseAISettings') || '{}');
+      
+      document.getElementById('openaiKey').value = settings.openaiKey || '';
+      document.getElementById('aiMode').value = settings.aiMode || 'intermediate';
+      document.getElementById('responseLength').value = settings.responseLength || 'medium';
+      document.getElementById('codeLanguage').value = settings.codeLanguage || 'javascript';
+      document.getElementById('theme').value = settings.theme || 'auto';
+      document.getElementById('analyticsEnabled').checked = settings.analyticsEnabled !== false;
+    });
+
+    // Save settings
+    function saveSettings(event) {
+      event.preventDefault();
+
+      const settings = {
+        openaiKey: document.getElementById('openaiKey').value,
+        aiMode: document.getElementById('aiMode').value,
+        responseLength: document.getElementById('responseLength').value,
+        codeLanguage: document.getElementById('codeLanguage').value,
+        theme: document.getElementById('theme').value,
+        analyticsEnabled: document.getElementById('analyticsEnabled').checked,
+        savedAt: new Date().toISOString(),
+      };
+
+      localStorage.setItem('bcaverseAISettings', JSON.stringify(settings));
+      localStorage.setItem('OPENAI_API_KEY', settings.openaiKey);
+
+      // Show success message
+      const btn = document.querySelector('.btn-save');
+      const originalText = btn.textContent;
+      btn.textContent = '✅ Settings Saved!';
+      setTimeout(() => {
+        btn.textContent = originalText;
+      }, 2000);
+    }
+
+    // Theme toggle
+    document.getElementById('darkToggle').addEventListener('click', function() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+  </script>
+</body>
+</html>
